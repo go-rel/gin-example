@@ -1,11 +1,11 @@
 package api
 
 import (
-	"github.com/Fs02/go-todo-backend/api/handler"
-	"github.com/Fs02/go-todo-backend/scores"
-	"github.com/Fs02/go-todo-backend/todos"
 	"github.com/go-chi/chi"
 	chimid "github.com/go-chi/chi/middleware"
+	"github.com/go-rel/gin-example/api/handler"
+	"github.com/go-rel/gin-example/scores"
+	"github.com/go-rel/gin-example/todos"
 	"github.com/go-rel/rel"
 	"github.com/goware/cors"
 )

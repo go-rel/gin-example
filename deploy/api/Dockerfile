@@ -3,7 +3,7 @@ FROM golang:1.13.5-alpine3.11 AS builder
 
 RUN apk update && apk add --no-cache git make
 
-WORKDIR $GOPATH/src/github.com/Fs02/go-todo-backend
+WORKDIR $GOPATH/src/github.com/go-rel/gin-example
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64\

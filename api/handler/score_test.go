@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Fs02/go-todo-backend/api/handler"
-	"github.com/Fs02/go-todo-backend/scores"
+	"github.com/go-rel/gin-example/api/handler"
+	"github.com/go-rel/gin-example/scores"
 	"github.com/go-rel/rel/reltest"
 	"github.com/stretchr/testify/assert"
 )

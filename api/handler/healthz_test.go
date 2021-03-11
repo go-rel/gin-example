@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Fs02/go-todo-backend/api/handler"
+	"github.com/go-rel/gin-example/api/handler"
 	"github.com/stretchr/testify/assert"
 )
 

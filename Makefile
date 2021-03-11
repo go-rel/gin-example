@@ -1,5 +1,5 @@
 export RELEASE_VERSION	?= $(shell git show -q --format=%h)
-export DOCKER_REGISTRY	?= docker.pkg.github.com/fs02/go-todo-backend
+export DOCKER_REGISTRY	?= docker.pkg.github.com/go-rel/gin-example
 export DEPLOY			?= api
 
 all: build start

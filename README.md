@@ -1,10 +1,10 @@
 # go-todo-backend
 
-[![GoDoc](https://godoc.org/github.com/Fs02/go-todo-backend?status.svg)](https://godoc.org/github.com/Fs02/go-todo-backend)
-[![Build Status](https://travis-ci.com/Fs02/go-todo-backend.svg?branch=master)](https://travis-ci.com/Fs02/go-todo-backend)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Fs02/go-todo-backend)](https://goreportcard.com/report/github.com/Fs02/go-todo-backend)
-[![Maintainability](https://api.codeclimate.com/v1/badges/d506b5b2df687cbcd358/maintainability)](https://codeclimate.com/github/Fs02/go-todo-backend/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/d506b5b2df687cbcd358/test_coverage)](https://codeclimate.com/github/Fs02/go-todo-backend/test_coverage)
+[![GoDoc](https://godoc.org/github.com/go-rel/gin-example?status.svg)](https://godoc.org/github.com/go-rel/gin-example)
+[![Build Status](https://travis-ci.com/go-rel/gin-example.svg?branch=master)](https://travis-ci.com/go-rel/gin-example)
+[![Go Report Card](https://goreportcard.com/badge/github.com/go-rel/gin-example)](https://goreportcard.com/report/github.com/go-rel/gin-example)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d506b5b2df687cbcd358/maintainability)](https://codeclimate.com/github/go-rel/gin-example/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d506b5b2df687cbcd358/test_coverage)](https://codeclimate.com/github/go-rel/gin-example/test_coverage)
 
 Go Todo Backend Example Using Modular Project Layout for Product Microservice. It's suitable as starting point for a medium to larger project.
 

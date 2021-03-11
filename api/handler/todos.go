@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Fs02/go-todo-backend/todos"
 	"github.com/go-chi/chi"
+	"github.com/go-rel/gin-example/todos"
 	"github.com/go-rel/rel"
 	"github.com/go-rel/rel/where"
 	"go.uber.org/zap"

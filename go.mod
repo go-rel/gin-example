@@ -1,4 +1,4 @@
-module github.com/Fs02/go-todo-backend
+module github.com/go-rel/gin-example
 
 go 1.14
 

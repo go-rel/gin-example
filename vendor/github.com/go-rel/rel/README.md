@@ -35,7 +35,7 @@ go get github.com/go-rel/rel
 
 ## Examples
 
-- [go-todo-backend](https://github.com/Fs02/go-todo-backend) - Todo Backend
+- [go-todo-backend](https://github.com/go-rel/gin-example) - Todo Backend
 
 ## License
 
