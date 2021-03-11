@@ -1,0 +1,4 @@
+exclude_patterns:
+  - "**/vendor/"
+  - "**/*_test.go"
+  - adapter/specs/

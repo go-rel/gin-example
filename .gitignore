@@ -1,0 +1,4 @@
+.env
+bin
+!bin/README.md
+data/
