@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/api/handler"
 	"github.com/stretchr/testify/assert"
 )
@@ -46,14 +47,16 @@ func TestHealthz_Show(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var (
+				router  = gin.New()
+				handler = handler.NewHealthz()
 				req, _  = http.NewRequest("GET", test.path, nil)
 				rr      = httptest.NewRecorder()
-				handler = handler.NewHealthz()
 			)
 
 			handler.Add("test", test.pinger)
 
-			handler.ServeHTTP(rr, req)
+			handler.Mount(router.Group("/"))
+			router.ServeHTTP(rr, req)
 
 			assert.Equal(t, test.status, rr.Code)
 			assert.JSONEq(t, test.response, rr.Body.String())

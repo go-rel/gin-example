@@ -27,10 +27,10 @@ func main() {
 		ctx        = context.Background()
 		port       = os.Getenv("PORT")
 		repository = initRepository()
-		mux        = api.NewMux(repository)
+		handler    = api.New(repository)
 		server     = http.Server{
 			Addr:    ":" + port,
-			Handler: mux,
+			Handler: handler,
 		}
 		shutdown = make(chan struct{})
 	)

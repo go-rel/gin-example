@@ -14,11 +14,11 @@ import (
 	"go.uber.org/zap"
 )
 
-// NewMux api.
-func NewMux(repository rel.Repository) *gin.Engine {
+// New api.
+func New(repository rel.Repository) *gin.Engine {
 	var (
 		logger, _      = zap.NewProduction()
-		router         = gin.Default()
+		router         = gin.New()
 		scores         = scores.New(repository)
 		todos          = todos.New(repository, scores)
 		healthzHandler = handler.NewHealthz()

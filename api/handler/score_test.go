@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/api/handler"
 	"github.com/go-rel/gin-example/scores"
 	"github.com/go-rel/rel/reltest"
@@ -33,17 +34,20 @@ func TestScore_Index(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var (
-				req, _     = http.NewRequest("GET", test.path, nil)
-				rr         = httptest.NewRecorder()
+				router     = gin.New()
 				repository = reltest.New()
 				handler    = handler.NewScore(repository)
+				req, _     = http.NewRequest("GET", test.path, nil)
+				rr         = httptest.NewRecorder()
 			)
 
 			if test.mockRepo != nil {
 				test.mockRepo(repository)
 			}
 
-			handler.ServeHTTP(rr, req)
+			handler.Mount(router.Group("/"))
+			router.ServeHTTP(rr, req)
+
 			assert.Equal(t, test.status, rr.Code)
 			assert.JSONEq(t, test.response, rr.Body.String())
 
@@ -74,17 +78,20 @@ func TestScore_Points(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var (
-				req, _     = http.NewRequest("GET", test.path, nil)
-				rr         = httptest.NewRecorder()
+				router     = gin.New()
 				repository = reltest.New()
 				handler    = handler.NewScore(repository)
+				req, _     = http.NewRequest("GET", test.path, nil)
+				rr         = httptest.NewRecorder()
 			)
 
 			if test.mockRepo != nil {
 				test.mockRepo(repository)
 			}
 
-			handler.ServeHTTP(rr, req)
+			handler.Mount(router.Group("/"))
+			router.ServeHTTP(rr, req)
+
 			assert.Equal(t, test.status, rr.Code)
 			assert.JSONEq(t, test.response, rr.Body.String())
 

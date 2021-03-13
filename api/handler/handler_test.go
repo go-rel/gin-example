@@ -1,12 +1,46 @@
 package handler
 
 import (
+	"bufio"
 	"errors"
+	"net"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
+
+type responseRecorder struct {
+	*httptest.ResponseRecorder
+}
+
+func (crr *responseRecorder) CloseNotify() <-chan bool {
+	return nil
+}
+
+func (crr *responseRecorder) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	return nil, nil, nil
+}
+
+func (crr *responseRecorder) Pusher() http.Pusher {
+	return nil
+}
+
+func (crr *responseRecorder) Size() int {
+	return 0
+}
+
+func (curr *responseRecorder) Status() int {
+	return 0
+}
+
+func (curr *responseRecorder) WriteHeaderNow() {}
+
+func (curr *responseRecorder) Written() bool {
+	return true
+}
 
 func TestRender(t *testing.T) {
 	tests := []struct {
@@ -42,9 +76,10 @@ func TestRender(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var (
 				rr = httptest.NewRecorder()
+				c  = &gin.Context{Writer: &responseRecorder{rr}}
 			)
 
-			render(rr, test.data, 200)
+			render(c, test.data, 200)
 			if test.response != "" {
 				assert.JSONEq(t, test.response, rr.Body.String())
 			} else {
