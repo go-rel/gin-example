@@ -1,4 +1,4 @@
-# go-todo-backend
+# Gin + Rel Todo Backend Example
 
 [![GoDoc](https://godoc.org/github.com/go-rel/gin-example?status.svg)](https://godoc.org/github.com/go-rel/gin-example)
 [![Build Status](https://travis-ci.com/go-rel/gin-example.svg?branch=master)](https://travis-ci.com/go-rel/gin-example)
