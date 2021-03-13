@@ -32,13 +32,13 @@ func (crr *responseRecorder) Size() int {
 	return 0
 }
 
-func (curr *responseRecorder) Status() int {
+func (crr *responseRecorder) Status() int {
 	return 0
 }
 
-func (curr *responseRecorder) WriteHeaderNow() {}
+func (crr *responseRecorder) WriteHeaderNow() {}
 
-func (curr *responseRecorder) Written() bool {
+func (crr *responseRecorder) Written() bool {
 	return true
 }
 
