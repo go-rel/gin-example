@@ -3,9 +3,11 @@ module github.com/go-rel/gin-example
 go 1.14
 
 require (
-	github.com/go-chi/chi v4.1.2+incompatible
+	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-contrib/requestid v0.0.1
+	github.com/gin-contrib/zap v0.0.1
+	github.com/gin-gonic/gin v1.6.3
 	github.com/go-rel/rel v0.11.0
-	github.com/goware/cors v1.1.1
 	github.com/lib/pq v1.10.0
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0

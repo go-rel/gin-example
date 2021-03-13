@@ -1,19 +1,24 @@
 package api
 
 import (
-	"github.com/go-chi/chi"
-	chimid "github.com/go-chi/chi/middleware"
+	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/requestid"
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/api/handler"
 	"github.com/go-rel/gin-example/scores"
 	"github.com/go-rel/gin-example/todos"
 	"github.com/go-rel/rel"
-	"github.com/goware/cors"
+	"go.uber.org/zap"
 )
 
 // NewMux api.
-func NewMux(repository rel.Repository) *chi.Mux {
+func NewMux(repository rel.Repository) *gin.Engine {
 	var (
-		mux            = chi.NewMux()
+		logger, _      = zap.NewProduction()
+		router         = gin.Default()
 		scores         = scores.New(repository)
 		todos          = todos.New(repository, scores)
 		healthzHandler = handler.NewHealthz()
@@ -23,14 +28,14 @@ func NewMux(repository rel.Repository) *chi.Mux {
 
 	healthzHandler.Add("database", repository)
 
-	mux.Use(chimid.RequestID)
-	mux.Use(chimid.RealIP)
-	mux.Use(chimid.Recoverer)
-	mux.Use(cors.AllowAll().Handler)
+	router.Use(ginzap.Ginzap(logger, time.RFC3339, true))
+	router.Use(ginzap.RecoveryWithZap(logger, true))
+	router.Use(requestid.New())
+	router.Use(cors.Default())
 
-	mux.Mount("/healthz", healthzHandler)
-	mux.Mount("/todos", todosHandler)
-	mux.Mount("/score", scoreHandler)
+	healthzHandler.Mount(router.Group("/healthz"))
+	todosHandler.Mount(router.Group("/todos"))
+	scoreHandler.Mount(router.Group("/score"))
 
-	return mux
+	return router
 }

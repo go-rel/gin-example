@@ -2,10 +2,9 @@ package handler
 
 import (
 	"context"
-	"net/http"
 	"sync"
 
-	"github.com/go-chi/chi"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
@@ -21,12 +20,11 @@ type ping struct {
 
 // Healthz handler.
 type Healthz struct {
-	*chi.Mux
 	pingers map[string]Pinger
 }
 
 // Show handle GET /
-func (h Healthz) Show(w http.ResponseWriter, r *http.Request) {
+func (h Healthz) Show(c *gin.Context) {
 	var (
 		wg     sync.WaitGroup
 		status = 200
@@ -41,7 +39,7 @@ func (h Healthz) Show(w http.ResponseWriter, r *http.Request) {
 			defer wg.Done()
 
 			pings[i].Service = service
-			if err := pinger.Ping(r.Context()); err != nil {
+			if err := pinger.Ping(c); err != nil {
 				logger.Error("ping error", zap.Error(err))
 
 				status = 503
@@ -54,7 +52,7 @@ func (h Healthz) Show(w http.ResponseWriter, r *http.Request) {
 	}
 	wg.Wait()
 
-	render(w, pings, status)
+	render(c, pings, status)
 }
 
 // Add a pinger.
@@ -62,14 +60,16 @@ func (h *Healthz) Add(name string, ping Pinger) {
 	h.pingers[name] = ping
 }
 
+// Mount handlers to router group.
+func (h *Healthz) Mount(router *gin.RouterGroup) {
+	router.GET("/", h.Show)
+}
+
 // NewHealthz handler.
 func NewHealthz() Healthz {
 	h := Healthz{
-		Mux:     chi.NewMux(),
 		pingers: make(map[string]Pinger),
 	}
-
-	h.Get("/", h.Show)
 
 	return h
 }

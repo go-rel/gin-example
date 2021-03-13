@@ -8,7 +8,7 @@
 
 Go Todo Backend Example Using Modular Project Layout for Product Microservice. It's suitable as starting point for a medium to larger project.
 
-This example uses [Chi](https://github.com/go-chi/chi) for http router and [REL](https://github.com/go-rel/rel) for database access.
+This example uses [Gin](https://github.com/gin-gonic/gin) for http router and [REL](https://github.com/go-rel/rel) for database access.
 
 Feature:
 

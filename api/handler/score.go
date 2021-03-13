@@ -1,50 +1,45 @@
 package handler
 
 import (
-	"net/http"
-
-	"github.com/go-chi/chi"
+	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/scores"
 	"github.com/go-rel/rel"
 )
 
 // Score for score endpoints.
 type Score struct {
-	*chi.Mux
 	repository rel.Repository
 }
 
 // Index handle GET /
-func (s Score) Index(w http.ResponseWriter, r *http.Request) {
+func (s Score) Index(c *gin.Context) {
 	var (
-		ctx    = r.Context()
 		result scores.Score
 	)
 
-	s.repository.Find(ctx, &result)
-	render(w, result, 200)
+	s.repository.Find(c, &result)
+	render(c, result, 200)
 }
 
 // Points handle Get /points
-func (s Score) Points(w http.ResponseWriter, r *http.Request) {
+func (s Score) Points(c *gin.Context) {
 	var (
-		ctx    = r.Context()
 		result []scores.Point
 	)
 
-	s.repository.FindAll(ctx, &result)
-	render(w, result, 200)
+	s.repository.FindAll(c, &result)
+	render(c, result, 200)
+}
+
+// Mount handlers to router group.
+func (s Score) Mount(router *gin.RouterGroup) {
+	router.GET("/", s.Index)
+	router.GET("/points", s.Points)
 }
 
 // NewScore handler.
 func NewScore(repository rel.Repository) Score {
-	h := Score{
-		Mux:        chi.NewMux(),
+	return Score{
 		repository: repository,
 	}
-
-	h.Get("/", h.Index)
-	h.Get("/points", h.Points)
-
-	return h
 }

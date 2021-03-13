@@ -1,14 +1,11 @@
 package handler
 
 import (
-	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi"
+	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/todos"
 	"github.com/go-rel/rel"
 	"github.com/go-rel/rel/where"
@@ -18,148 +15,134 @@ import (
 type ctx int
 
 const (
-	bodyKey ctx = 0
-	loadKey ctx = 1
+	loadKey string = "todosLoadKey"
 )
 
 // Todos for todos endpoints.
 type Todos struct {
-	*chi.Mux
 	repository rel.Repository
 	todos      todos.Service
 }
 
 // Index handle GET /.
-func (t Todos) Index(w http.ResponseWriter, r *http.Request) {
+func (t Todos) Index(c *gin.Context) {
 	var (
-		ctx    = r.Context()
-		query  = r.URL.Query()
 		result []todos.Todo
 		filter = todos.Filter{
-			Keyword: query.Get("keyword"),
+			Keyword: c.Query("keyword"),
 		}
 	)
 
-	if str := query.Get("completed"); str != "" {
+	if str := c.Query("completed"); str != "" {
 		completed := str == "true"
 		filter.Completed = &completed
 	}
 
-	t.todos.Search(ctx, &result, filter)
-	render(w, result, 200)
+	t.todos.Search(c, &result, filter)
+	render(c, result, 200)
 }
 
 // Create handle POST /
-func (t Todos) Create(w http.ResponseWriter, r *http.Request) {
+func (t Todos) Create(c *gin.Context) {
 	var (
-		ctx  = r.Context()
 		todo todos.Todo
 	)
 
-	if err := json.NewDecoder(r.Body).Decode(&todo); err != nil {
+	if err := c.ShouldBindJSON(&todo); err != nil {
 		logger.Warn("decode error", zap.Error(err))
-		render(w, ErrBadRequest, 400)
+		render(c, ErrBadRequest, 400)
 		return
 	}
 
-	if err := t.todos.Create(ctx, &todo); err != nil {
-		render(w, err, 422)
+	if err := t.todos.Create(c, &todo); err != nil {
+		render(c, err, 422)
 		return
 	}
 
-	w.Header().Set("Location", fmt.Sprint(r.RequestURI, "/", todo.ID))
-	render(w, todo, 201)
+	c.Header("Location", fmt.Sprint(c.Request.RequestURI, "/", todo.ID))
+	render(c, todo, 201)
 }
 
 // Show handle GET /{ID}
-func (t Todos) Show(w http.ResponseWriter, r *http.Request) {
+func (t Todos) Show(c *gin.Context) {
 	var (
-		ctx  = r.Context()
-		todo = ctx.Value(loadKey).(todos.Todo)
+		todo = c.MustGet(loadKey).(todos.Todo)
 	)
 
-	render(w, todo, 200)
+	render(c, todo, 200)
 }
 
 // Update handle PATCH /{ID}
-func (t Todos) Update(w http.ResponseWriter, r *http.Request) {
+func (t Todos) Update(c *gin.Context) {
 	var (
-		ctx     = r.Context()
-		todo    = ctx.Value(loadKey).(todos.Todo)
+		todo    = c.MustGet(loadKey).(todos.Todo)
 		changes = rel.NewChangeset(&todo)
 	)
 
-	if err := json.NewDecoder(r.Body).Decode(&todo); err != nil {
+	if err := c.ShouldBindJSON(&todo); err != nil {
 		logger.Warn("decode error", zap.Error(err))
-		render(w, ErrBadRequest, 400)
+		render(c, ErrBadRequest, 400)
 		return
 	}
 
-	if err := t.todos.Update(ctx, &todo, changes); err != nil {
-		render(w, err, 422)
+	if err := t.todos.Update(c, &todo, changes); err != nil {
+		render(c, err, 422)
 		return
 	}
 
-	render(w, todo, 200)
+	render(c, todo, 200)
 }
 
 // Destroy handle DELETE /{ID}
-func (t Todos) Destroy(w http.ResponseWriter, r *http.Request) {
+func (t Todos) Destroy(c *gin.Context) {
 	var (
-		ctx  = r.Context()
-		todo = ctx.Value(loadKey).(todos.Todo)
+		todo = c.MustGet(loadKey).(todos.Todo)
 	)
 
-	t.todos.Delete(ctx, &todo)
-	render(w, nil, 204)
+	t.todos.Delete(c, &todo)
+	render(c, nil, 204)
 }
 
 // Clear handle DELETE /
-func (t Todos) Clear(w http.ResponseWriter, r *http.Request) {
-	var (
-		ctx = r.Context()
-	)
-
-	t.todos.Clear(ctx)
-	render(w, nil, 204)
+func (t Todos) Clear(c *gin.Context) {
+	t.todos.Clear(c)
+	render(c, nil, 204)
 }
 
 // Load is middleware that loads todos to context.
-func (t Todos) Load(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var (
-			ctx   = r.Context()
-			id, _ = strconv.Atoi(chi.URLParam(r, "ID"))
-			todo  todos.Todo
-		)
+func (t Todos) Load(c *gin.Context) {
+	var (
+		id, _ = strconv.Atoi(c.Param("ID"))
+		todo  todos.Todo
+	)
 
-		if err := t.repository.Find(ctx, &todo, where.Eq("id", id)); err != nil {
-			if errors.Is(err, rel.ErrNotFound) {
-				render(w, err, 404)
-				return
-			}
-			panic(err)
+	if err := t.repository.Find(c, &todo, where.Eq("id", id)); err != nil {
+		if errors.Is(err, rel.ErrNotFound) {
+			render(c, err, 404)
+			c.Abort()
+			return
 		}
+		panic(err)
+	}
 
-		ctx = context.WithValue(ctx, loadKey, todo)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+	c.Set(loadKey, todo)
+	c.Next()
+}
+
+// Mount handlers to router group.
+func (t Todos) Mount(router *gin.RouterGroup) {
+	router.GET("/", t.Index)
+	router.POST("/", t.Create)
+	router.GET("/:ID", t.Load, t.Show)
+	router.PATCH("/:ID", t.Load, t.Update)
+	router.DELETE("/:ID", t.Load, t.Destroy)
+	router.DELETE("/", t.Clear)
 }
 
 // NewTodos handler.
 func NewTodos(repository rel.Repository, todos todos.Service) Todos {
-	h := Todos{
-		Mux:        chi.NewMux(),
+	return Todos{
 		repository: repository,
 		todos:      todos,
 	}
-
-	h.Get("/", h.Index)
-	h.Post("/", h.Create)
-	h.With(h.Load).Get("/{ID}", h.Show)
-	h.With(h.Load).Patch("/{ID}", h.Update)
-	h.With(h.Load).Delete("/{ID}", h.Destroy)
-	h.Delete("/", h.Clear)
-
-	return h
 }

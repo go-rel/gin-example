@@ -1,10 +1,9 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
-	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
@@ -14,26 +13,23 @@ var (
 	ErrBadRequest = errors.New("Bad Request")
 )
 
-func render(w http.ResponseWriter, body interface{}, status int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-
+func render(c *gin.Context, body interface{}, status int) {
 	switch v := body.(type) {
 	case string:
-		json.NewEncoder(w).Encode(struct {
+		c.JSON(status, struct {
 			Message string `json:"message"`
 		}{
 			Message: v,
 		})
 	case error:
-		json.NewEncoder(w).Encode(struct {
+		c.JSON(status, struct {
 			Error string `json:"error"`
 		}{
 			Error: v.Error(),
 		})
 	case nil:
-		// do nothing
+		c.Status(status)
 	default:
-		json.NewEncoder(w).Encode(body)
+		c.JSON(status, body)
 	}
 }
