@@ -16,7 +16,7 @@ github.com/gin-contrib/zap v0.0.1 h1:wsX/ahRftxPiXpiUw0YqyHj+TQTKtv+DAFWH84G1Uvg
 github.com/gin-contrib/zap v0.0.1/go.mod h1:vJJndZ8f44gsTHQrDPIB4YOZzwOwiEIdE0mMrZLOogk=
 github.com/gin-gonic/gin v1.5.0/go.mod h1:Nd6IXA8m5kNZdNEHMBd93KT+mdY3+bewLgRvmCsR2Do=
 github.com/gin-gonic/gin v1.6.3/go.mod h1:75u5sXoLsGZoRN5Sgbi1eraJ4GU3++wFwWzhwvtwp4M=
-github.com/gin-gonic/gin v1.7.3 h1:3U500Wp728rATEiFJtk1L7dhAbWobNDQC0Cbd4yhhdc=
+github.com/gin-gonic/gin v1.7.3 h1:aMBzLJ/GMEYmv1UWs2FFTcPISLrQH2mRgL9Glz8xows=
 github.com/gin-gonic/gin v1.7.3/go.mod h1:jD2toBW3GZUr5UMcdrwQA10I7RuaFOl/SGeDjXkfUtY=
 github.com/go-playground/assert/v2 v2.0.1 h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBYNjji3q3A=
 github.com/go-playground/assert/v2 v2.0.1/go.mod h1:VDjEfimB/XKnb+ZQfWdccd7VUvScMdVu0Titje2rxJ4=
@@ -29,8 +29,8 @@ github.com/go-playground/universal-translator v0.17.0/go.mod h1:UkSxE5sNxxRwHyU+
 github.com/go-playground/validator/v10 v10.2.0/go.mod h1:uOYAAleCW8F/7oMFd6aG0GOhaH6EGOAJShg8Id5JGkI=
 github.com/go-playground/validator/v10 v10.4.1 h1:pH2c5ADXtd66mxoE0Zm9SUhxE20r7aM3F26W0hOn+GE=
 github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=
-github.com/go-rel/rel v0.11.0 h1:eDMn6HCM9rKjWRLrglbb4a5F2qMS+d6ZIsEjw9AT+JI=
-github.com/go-rel/rel v0.11.0/go.mod h1:XgnuQgSs6iSOQaZ+fp+uz4GdYsdyKcnAKkc0WhkXVJI=
+github.com/go-rel/rel v0.17.0 h1:SoES3p9X8ixQ/E9NR/MnWJ9jYJpBvYzt8RKIVImSnnk=
+github.com/go-rel/rel v0.17.0/go.mod h1:XgnuQgSs6iSOQaZ+fp+uz4GdYsdyKcnAKkc0WhkXVJI=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
