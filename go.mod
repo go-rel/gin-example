@@ -7,7 +7,7 @@ require (
 	github.com/gin-contrib/requestid v0.0.1
 	github.com/gin-contrib/zap v0.0.1
 	github.com/gin-gonic/gin v1.7.4
-	github.com/go-rel/rel v0.20.0
+	github.com/go-rel/rel v0.21.0
 	github.com/lib/pq v1.10.2
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0
