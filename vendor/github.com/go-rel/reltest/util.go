@@ -29,12 +29,15 @@ func csprint(v interface{}, parent bool) string {
 		str += fmt.Sprintf("%s{", rt.String())
 		for i := 0; i < rt.NumField(); i++ {
 			var (
-				fv    = rv.Field(i)
-				ft    = rt.Field(i)
-				fvstr = csprint(fv.Interface(), false)
+				fv = rv.Field(i)
+				ft = rt.Field(i)
 			)
 
-			if fvstr != "" {
+			if c := ft.Name[0]; c < 'A' || c > 'Z' {
+				continue
+			}
+
+			if fvstr := csprint(fv.Interface(), false); fvstr != "" {
 				if notEmpty && i > 0 {
 					str += ", "
 				}
