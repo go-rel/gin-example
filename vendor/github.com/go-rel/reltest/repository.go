@@ -152,8 +152,9 @@ func (r *Repository) ExpectFindAndCountAll(queriers ...rel.Querier) *MockFindAnd
 
 // Insert provides a mock function with given fields: record, mutators
 func (r *Repository) Insert(ctx context.Context, record interface{}, mutators ...rel.Mutator) error {
+	ret := r.insert.execute("Insert", ctx, record, mutators...)
 	r.repo.Insert(ctx, record, mutators...)
-	return r.insert.execute("Insert", ctx, record, mutators...)
+	return ret
 }
 
 // MustInsert provides a mock function with given fields: record, mutators
@@ -184,11 +185,12 @@ func (r *Repository) ExpectInsertAll() *MockInsertAll {
 
 // Update provides a mock function with given fields: record, mutators
 func (r *Repository) Update(ctx context.Context, record interface{}, mutators ...rel.Mutator) error {
+	ret := r.update.execute("Update", ctx, record, mutators...)
 	if err := r.repo.Update(ctx, record, mutators...); err != nil {
 		return err
 	}
 
-	return r.update.execute("Update", ctx, record, mutators...)
+	return ret
 }
 
 // MustUpdate provides a mock function with given fields: record, mutators

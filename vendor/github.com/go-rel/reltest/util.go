@@ -67,6 +67,11 @@ func csprint(v interface{}, parent bool) string {
 			}
 		}
 		str += "}"
+	case reflect.String:
+		if !rv.IsZero() {
+			str = fmt.Sprintf("%q", v)
+			notEmpty = true
+		}
 	default:
 		if !rv.IsZero() {
 			str = fmt.Sprintf("%v", rv.Interface())

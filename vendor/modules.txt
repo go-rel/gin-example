@@ -31,7 +31,7 @@ github.com/go-rel/rel
 github.com/go-rel/rel/adapter/postgres
 github.com/go-rel/rel/adapter/sql
 github.com/go-rel/rel/where
-# github.com/go-rel/reltest v0.0.0-20210829152122-e523e9cb4673
+# github.com/go-rel/reltest v0.0.0-20210913131019-2a11374086ac
 ## explicit
 github.com/go-rel/reltest
 # github.com/golang/protobuf v1.4.2
