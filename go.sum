@@ -32,8 +32,8 @@ github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn
 github.com/go-rel/rel v0.20.1-0.20210821112018-86681777239d/go.mod h1:tgzX9l1JhGDBHtwUs64LbaOt2+ysKJoHrm18+JHflCA=
 github.com/go-rel/rel v0.23.0 h1:xVte6QJhCLGQoTeHeUbIWTVDwllFCVzmJ8511XEnbtg=
 github.com/go-rel/rel v0.23.0/go.mod h1:/VBLj1U4ZVb53aB3n22RQwX0V9DvckohseDJQibn2Rs=
-github.com/go-rel/reltest v0.0.0-20210913131019-2a11374086ac h1:ykn1dJ9kvAfBSgxMTxc6LMGpzmXKaz3xreDURUkPOl4=
-github.com/go-rel/reltest v0.0.0-20210913131019-2a11374086ac/go.mod h1:6JOQeeepchfUPVa8NeV2LxynpPZzkidrs0ZSdTW/P2Y=
+github.com/go-rel/reltest v0.1.0 h1:NlXFi+V3nqLinsLhZgSWTaaN7OQ+eFzHb7uAWU83N+g=
+github.com/go-rel/reltest v0.1.0/go.mod h1:6JOQeeepchfUPVa8NeV2LxynpPZzkidrs0ZSdTW/P2Y=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
