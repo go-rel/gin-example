@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-rel/gin-example/api/handler"
 	"github.com/go-rel/gin-example/scores"
-	"github.com/go-rel/rel/reltest"
+	"github.com/go-rel/reltest"
 	"github.com/stretchr/testify/assert"
 )
 
