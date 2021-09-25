@@ -29,10 +29,17 @@ github.com/go-playground/universal-translator v0.17.0/go.mod h1:UkSxE5sNxxRwHyU+
 github.com/go-playground/validator/v10 v10.2.0/go.mod h1:uOYAAleCW8F/7oMFd6aG0GOhaH6EGOAJShg8Id5JGkI=
 github.com/go-playground/validator/v10 v10.4.1 h1:pH2c5ADXtd66mxoE0Zm9SUhxE20r7aM3F26W0hOn+GE=
 github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=
+github.com/go-rel/mysql v0.0.0-20210924145217-8348a39e4654 h1:ceS5gIMUdkBqINw5m/wms1Mtsfgfxru3ZH4YS5VGXLU=
+github.com/go-rel/mysql v0.0.0-20210924145217-8348a39e4654/go.mod h1:GbysfN6fRsmRTNBjv9BTAqLrjHBJzRcHEbQHUs8iaQE=
 github.com/go-rel/rel v0.23.0 h1:xVte6QJhCLGQoTeHeUbIWTVDwllFCVzmJ8511XEnbtg=
 github.com/go-rel/rel v0.23.0/go.mod h1:/VBLj1U4ZVb53aB3n22RQwX0V9DvckohseDJQibn2Rs=
 github.com/go-rel/reltest v0.1.2 h1:echZHiP18fHD8wujeb+ItlvgPTKJPcFPIyfMejqMpqY=
 github.com/go-rel/reltest v0.1.2/go.mod h1:GzovZ+OKR44eo54OdPztNOSvJu3SPyDb+0biSBhN5Yw=
+github.com/go-rel/sql v0.0.0-20210924071334-d5c44e7ac27a h1:XHhefCPNAkIAlWBTLnIhP558wG5GN8G72txM+i7P3pQ=
+github.com/go-rel/sql v0.0.0-20210924071334-d5c44e7ac27a/go.mod h1:vnvQ9jFzTgFvOl5qcntoFXrs9sas39YcIJG30LFlc50=
+github.com/go-rel/sql v0.0.0-20210925030309-1800519ebc56 h1:iu4mk72tXa36SkAWkHGEiwdClnZ+Qx2EhqlQN5NyXuA=
+github.com/go-rel/sql v0.0.0-20210925030309-1800519ebc56/go.mod h1:vnvQ9jFzTgFvOl5qcntoFXrs9sas39YcIJG30LFlc50=
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
