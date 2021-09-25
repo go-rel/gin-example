@@ -7,10 +7,9 @@ require (
 	github.com/gin-contrib/requestid v0.0.1
 	github.com/gin-contrib/zap v0.0.1
 	github.com/gin-gonic/gin v1.7.4
-	github.com/go-rel/mysql v0.0.0-20210924145217-8348a39e4654
-	github.com/go-rel/rel v0.23.0
+	github.com/go-rel/mysql v0.1.0
+	github.com/go-rel/rel v0.24.0
 	github.com/go-rel/reltest v0.1.2
-	github.com/go-rel/sql v0.0.0-20210925030309-1800519ebc56 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.1
