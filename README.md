@@ -30,7 +30,7 @@ Feature:
     ```
     cp .env.sample .env
     ```
-2. Start postgresql and create database.
+2. Start mysql and create database.
     ```
     docker-compose up -d
     ```
