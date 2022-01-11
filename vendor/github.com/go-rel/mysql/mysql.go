@@ -27,15 +27,17 @@ import (
 // Existing connection needs to be created with `clientFoundRows=true` options for update and delete to works correctly.
 func New(database *db.DB) rel.Adapter {
 	var (
-		bufferFactory    = builder.BufferFactory{ArgumentPlaceholder: "?", EscapePrefix: "`", EscapeSuffix: "`"}
+		bufferFactory    = builder.BufferFactory{ArgumentPlaceholder: "?", BoolTrueValue: "true", BoolFalseValue: "false", Quoter: Quote{}, ValueConverter: ValueConvert{}}
 		filterBuilder    = builder.Filter{}
 		queryBuilder     = builder.Query{BufferFactory: bufferFactory, Filter: filterBuilder}
 		InsertBuilder    = builder.Insert{BufferFactory: bufferFactory, InsertDefaultValues: true}
 		insertAllBuilder = builder.InsertAll{BufferFactory: bufferFactory}
 		updateBuilder    = builder.Update{BufferFactory: bufferFactory, Query: queryBuilder, Filter: filterBuilder}
 		deleteBuilder    = builder.Delete{BufferFactory: bufferFactory, Query: queryBuilder, Filter: filterBuilder}
-		tableBuilder     = builder.Table{BufferFactory: bufferFactory, ColumnMapper: sql.ColumnMapper}
-		indexBuilder     = builder.Index{BufferFactory: bufferFactory, DropIndexOnTable: true}
+		ddlBufferFactory = builder.BufferFactory{InlineValues: true, BoolTrueValue: "true", BoolFalseValue: "false", Quoter: Quote{}, ValueConverter: ValueConvert{}}
+		ddlQueryBuilder  = builder.Query{BufferFactory: ddlBufferFactory, Filter: filterBuilder}
+		tableBuilder     = builder.Table{BufferFactory: ddlBufferFactory, ColumnMapper: columnMapper}
+		indexBuilder     = builder.Index{BufferFactory: ddlBufferFactory, Query: ddlQueryBuilder, Filter: filterBuilder, DropIndexOnTable: true}
 	)
 
 	return &sql.SQL{
@@ -64,6 +66,16 @@ func Open(dsn string) (rel.Adapter, error) {
 
 	var database, err = db.Open("mysql", dsn)
 	return New(database), err
+}
+
+// MustOpen mysql connection using dsn.
+func MustOpen(dsn string) rel.Adapter {
+	var (
+		adapter, err = Open(dsn)
+	)
+
+	check(err)
+	return adapter
 }
 
 func incrementFunc(adapter sql.SQL) int {
@@ -112,6 +124,15 @@ func errorMapper(err error) error {
 		}
 	default:
 		return err
+	}
+}
+
+func columnMapper(column *rel.Column) (string, int, int) {
+	switch column.Type {
+	case rel.JSON:
+		return "JSON", 0, 0
+	default:
+		return sql.ColumnMapper(column)
 	}
 }
 
