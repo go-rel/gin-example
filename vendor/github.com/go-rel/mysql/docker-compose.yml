@@ -1,0 +1,42 @@
+version: '2.1'
+
+services:
+  mariadb-master:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '23306:3306'
+    environment:
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=rel
+      - MARIADB_PASSWORD=rel
+      - MARIADB_DATABASE=rel_test
+      - MARIADB_ROOT_PASSWORD=rel
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+  mariadb-slave:
+    image: docker.io/bitnami/mariadb:10.6
+    ports:
+      - '23307:3306'
+    depends_on:
+      - mariadb-master
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_USER=rel
+      - MARIADB_PASSWORD=rel
+      - MARIADB_DATABASE=rel_test
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_PASSWORD=rel
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
