@@ -3,7 +3,7 @@ github.com/davecgh/go-spew/spew
 # github.com/gin-contrib/cors v1.3.1
 ## explicit
 github.com/gin-contrib/cors
-# github.com/gin-contrib/requestid v0.0.1
+# github.com/gin-contrib/requestid v0.0.3
 ## explicit
 github.com/gin-contrib/requestid
 # github.com/gin-contrib/sse v0.1.0
@@ -43,7 +43,7 @@ github.com/go-rel/sql/builder
 github.com/go-sql-driver/mysql
 # github.com/golang/protobuf v1.4.2
 github.com/golang/protobuf/proto
-# github.com/google/uuid v1.1.1
+# github.com/google/uuid v1.2.0
 github.com/google/uuid
 # github.com/jinzhu/inflection v1.0.0
 github.com/jinzhu/inflection
