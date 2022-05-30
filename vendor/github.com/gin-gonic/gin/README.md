@@ -2,7 +2,7 @@
 
 <img align="right" width="159px" src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png">
 
-[![Build Status](https://travis-ci.org/gin-gonic/gin.svg)](https://travis-ci.org/gin-gonic/gin)
+[![Build Status](https://github.com/gin-gonic/gin/workflows/Run%20Tests/badge.svg?branch=master)](https://github.com/gin-gonic/gin/actions?query=branch%3Amaster)
 [![codecov](https://codecov.io/gh/gin-gonic/gin/branch/master/graph/badge.svg)](https://codecov.io/gh/gin-gonic/gin)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gin-gonic/gin)](https://goreportcard.com/report/github.com/gin-gonic/gin)
 [![GoDoc](https://pkg.go.dev/badge/github.com/gin-gonic/gin?status.svg)](https://pkg.go.dev/github.com/gin-gonic/gin?tab=doc)
@@ -23,7 +23,8 @@ Gin is a web framework written in Go (Golang). It features a martini-like API wi
   - [Quick start](#quick-start)
   - [Benchmarks](#benchmarks)
   - [Gin v1. stable](#gin-v1-stable)
-  - [Build with jsoniter](#build-with-jsoniter)
+  - [Build with jsoniter/go-json](#build-with-json-replacement)
+  - [Build without `MsgPack` rendering feature](#build-without-msgpack-rendering-feature)
   - [API Examples](#api-examples)
     - [Using GET, POST, PUT, PATCH, DELETE and OPTIONS](#using-get-post-put-patch-delete-and-options)
     - [Parameters in path](#parameters-in-path)
@@ -77,7 +78,7 @@ Gin is a web framework written in Go (Golang). It features a martini-like API wi
     - [http2 server push](#http2-server-push)
     - [Define format for the log of routes](#define-format-for-the-log-of-routes)
     - [Set and get a cookie](#set-and-get-a-cookie)
-  - [Don't trust all proxies](#don't-trust-all-proxies)
+  - [Don't trust all proxies](#dont-trust-all-proxies)
   - [Testing](#testing)
   - [Users](#users)
 
@@ -85,7 +86,7 @@ Gin is a web framework written in Go (Golang). It features a martini-like API wi
 
 To install Gin package, you need to install Go and set your Go workspace first.
 
-1. The first need [Go](https://golang.org/) installed (**version 1.13+ is required**), then you can use the below Go command to install Gin.
+1. You first need [Go](https://golang.org/) installed (**version 1.14+ is required**), then you can use the below Go command to install Gin.
 
 ```sh
 $ go get -u github.com/gin-gonic/gin
@@ -183,13 +184,28 @@ Gin uses a custom version of [HttpRouter](https://github.com/julienschmidt/httpr
 - [x] Battle tested.
 - [x] API frozen, new releases will not break your code.
 
-## Build with [jsoniter](https://github.com/json-iterator/go)
+## Build with json replacement
 
-Gin uses `encoding/json` as default json package but you can change to [jsoniter](https://github.com/json-iterator/go) by build from other tags.
+Gin uses `encoding/json` as default json package but you can change it by build from other tags.
 
+[jsoniter](https://github.com/json-iterator/go)
 ```sh
 $ go build -tags=jsoniter .
 ```
+[go-json](https://github.com/goccy/go-json)
+```sh
+$ go build -tags=go_json .
+```
+
+## Build without `MsgPack` rendering feature
+
+Gin enables `MsgPack` rendering feature by default. But you can disable this feature by specifying `nomsgpack` build tag.
+
+```sh
+$ go build -tags=nomsgpack .
+```
+
+This is useful to reduce the binary size of executable files. See the [detail information](https://github.com/gin-gonic/gin/pull/1852).
 
 ## API Examples
 
@@ -241,14 +257,15 @@ func main() {
 
 	// For each matched request Context will hold the route definition
 	router.POST("/user/:name/*action", func(c *gin.Context) {
-		c.FullPath() == "/user/:name/*action" // true
+		b := c.FullPath() == "/user/:name/*action" // true
+		c.String(http.StatusOK, "%t", b)
 	})
 
 	// This handler will add a new router for /user/groups.
 	// Exact routes are resolved before param routes, regardless of the order they were defined.
 	// Routes starting with /user/groups are never interpreted as /user/:name/... routes
 	router.GET("/user/groups", func(c *gin.Context) {
-		c.String(http.StatusOK, "The available groups are [...]", name)
+		c.String(http.StatusOK, "The available groups are [...]")
 	})
 
 	router.Run(":8080")
@@ -367,7 +384,7 @@ func main() {
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	router.MaxMultipartMemory = 8 << 20  // 8 MiB
 	router.POST("/upload", func(c *gin.Context) {
-		// single file
+		// Single file
 		file, _ := c.FormFile("file")
 		log.Println(file.Filename)
 
@@ -496,6 +513,7 @@ func main() {
 
 		// nested group
 		testing := authorized.Group("testing")
+		// visit 0.0.0.0:8080/testing/analytics
 		testing.GET("/analytics", analyticsEndpoint)
 	}
 
@@ -640,7 +658,7 @@ func main() {
 
 ### Model binding and validation
 
-To bind a request body into a type, use model binding. We currently support binding of JSON, XML, YAML and standard form values (foo=bar&boo=baz).
+To bind a request body into a type, use model binding. We currently support binding of JSON, XML, YAML, TOML and standard form values (foo=bar&boo=baz).
 
 Gin uses [**go-playground/validator/v10**](https://github.com/go-playground/validator) for validation. Check the full docs on tags usage [here](https://godoc.org/github.com/go-playground/validator#hdr-Baked_In_Validators_and_Tags).
 
@@ -648,10 +666,10 @@ Note that you need to set the corresponding binding tag on all fields you want t
 
 Also, Gin provides two sets of methods for binding:
 - **Type** - Must bind
-  - **Methods** - `Bind`, `BindJSON`, `BindXML`, `BindQuery`, `BindYAML`, `BindHeader`
+  - **Methods** - `Bind`, `BindJSON`, `BindXML`, `BindQuery`, `BindYAML`, `BindHeader`, `BindTOML`
   - **Behavior** - These methods use `MustBindWith` under the hood. If there is a binding error, the request is aborted with `c.AbortWithError(400, err).SetType(ErrorTypeBind)`. This sets the response status code to 400 and the `Content-Type` header is set to `text/plain; charset=utf-8`. Note that if you try to set the response code after this, it will result in a warning `[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 400 with 422`. If you wish to have greater control over the behavior, consider using the `ShouldBind` equivalent method.
 - **Type** - Should bind
-  - **Methods** - `ShouldBind`, `ShouldBindJSON`, `ShouldBindXML`, `ShouldBindQuery`, `ShouldBindYAML`, `ShouldBindHeader`
+  - **Methods** - `ShouldBind`, `ShouldBindJSON`, `ShouldBindXML`, `ShouldBindQuery`, `ShouldBindYAML`, `ShouldBindHeader`, `ShouldBindTOML`,
   - **Behavior** - These methods use `ShouldBindWith` under the hood. If there is a binding error, the error is returned and it is the developer's responsibility to handle the request and error appropriately.
 
 When using the Bind-method, Gin tries to infer the binder depending on the Content-Type header. If you are sure what you are binding, you can use `MustBindWith` or `ShouldBindWith`.
@@ -687,7 +705,7 @@ func main() {
 	// Example for binding XML (
 	//	<?xml version="1.0" encoding="UTF-8"?>
 	//	<root>
-	//		<user>user</user>
+	//		<user>manu</user>
 	//		<password>123</password>
 	//	</root>)
 	router.POST("/loginXML", func(c *gin.Context) {
@@ -889,7 +907,7 @@ func startPage(c *gin.Context) {
 	var person Person
 	// If `GET`, only `Form` binding engine (`query`) used.
 	// If `POST`, first checks the `content-type` for `JSON` or `XML`, then uses `Form` (`form-data`).
-	// See more at https://github.com/gin-gonic/gin/blob/master/binding/binding.go#L48
+	// See more at https://github.com/gin-gonic/gin/blob/master/binding/binding.go#L88
         if c.ShouldBind(&person) == nil {
                 log.Println(person.Name)
                 log.Println(person.Address)
@@ -926,7 +944,7 @@ func main() {
 	route.GET("/:name/:id", func(c *gin.Context) {
 		var person Person
 		if err := c.ShouldBindUri(&person); err != nil {
-			c.JSON(400, gin.H{"msg": err})
+			c.JSON(400, gin.H{"msg": err.Error()})
 			return
 		}
 		c.JSON(200, gin.H{"name": person.Name, "uuid": person.ID})
@@ -1226,7 +1244,8 @@ func main() {
 	router.Static("/assets", "./assets")
 	router.StaticFS("/more_static", http.Dir("my_file_system"))
 	router.StaticFile("/favicon.ico", "./resources/favicon.ico")
-
+	router.StaticFileFS("/more_favicon.ico", "more_favicon.ico", http.Dir("my_file_system"))
+	
 	// Listen and serve on 0.0.0.0:8080
 	router.Run(":8080")
 }
@@ -1392,7 +1411,7 @@ import (
 
 func formatAsDate(t time.Time) string {
     year, month, day := t.Date()
-    return fmt.Sprintf("%d%02d/%02d", year, month, day)
+    return fmt.Sprintf("%d/%02d/%02d", year, month, day)
 }
 
 func main() {
@@ -1811,7 +1830,7 @@ func main() {
 	quit := make(chan os.Signal)
 	// kill (no param) default send syscall.SIGTERM
 	// kill -2 is syscall.SIGINT
-	// kill -9 is syscall.SIGKILL but can't be catch, so don't need add it
+	// kill -9 is syscall.SIGKILL but can't be caught, so don't need to add it
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Println("Shutting down server...")
@@ -1984,7 +2003,7 @@ func SomeHandler(c *gin.Context) {
   objA := formA{}
   objB := formB{}
   // This reads c.Request.Body and stores the result into the context.
-  if errA := c.ShouldBindBodyWith(&objA, binding.JSON); errA == nil {
+  if errA := c.ShouldBindBodyWith(&objA, binding.Form); errA == nil {
     c.String(http.StatusOK, `the body should be formA`)
   // At this time, it reuses body stored in the context.
   } else if errB := c.ShouldBindBodyWith(&objB, binding.JSON); errB == nil {
@@ -2005,6 +2024,61 @@ enough to call binding at once.
 `ProtoBuf`. For other formats, `Query`, `Form`, `FormPost`, `FormMultipart`,
 can be called by `c.ShouldBind()` multiple times without any damage to
 performance (See [#1341](https://github.com/gin-gonic/gin/pull/1341)).
+
+### Bind form-data request with custom struct and custom tag
+
+```go
+const (
+	customerTag = "url"
+	defaultMemory = 32 << 20
+)
+
+type customerBinding struct {}
+
+func (customerBinding) Name() string {
+	return "form"
+}
+
+func (customerBinding) Bind(req *http.Request, obj interface{}) error {
+	if err := req.ParseForm(); err != nil {
+		return err
+	}
+	if err := req.ParseMultipartForm(defaultMemory); err != nil {
+		if err != http.ErrNotMultipart {
+			return err
+		}
+	}
+	if err := binding.MapFormWithTag(obj, req.Form, customerTag); err != nil {
+		return err
+	}
+	return validate(obj)
+}
+
+func validate(obj interface{}) error {
+	if binding.Validator == nil {
+		return nil
+	}
+	return binding.Validator.ValidateStruct(obj)
+}
+
+// Now we can do this!!!
+// FormA is a external type that we can't modify it's tag
+type FormA struct {
+	FieldA string `url:"field_a"`
+}
+
+func ListHandler(s *Service) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		var urlBinding = customerBinding{}
+		var opt FormA
+		err := ctx.MustBindWith(&opt, urlBinding)
+		if err != nil {
+			...
+		}
+		...
+	}
+}
+```
 
 ### http2 server push
 
@@ -2250,3 +2324,4 @@ Awesome project lists using [Gin](https://github.com/gin-gonic/gin) web framewor
 * [picfit](https://github.com/thoas/picfit): An image resizing server written in Go.
 * [brigade](https://github.com/brigadecore/brigade): Event-based Scripting for Kubernetes.
 * [dkron](https://github.com/distribworks/dkron): Distributed, fault tolerant job scheduling system.
+
