@@ -6,7 +6,7 @@ require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/requestid v0.0.4
 	github.com/gin-contrib/zap v0.0.2
-	github.com/gin-gonic/gin v1.7.7
+	github.com/gin-gonic/gin v1.8.0
 	github.com/go-rel/mysql v0.7.0
 	github.com/go-rel/rel v0.35.0
 	github.com/go-rel/reltest v0.9.0
