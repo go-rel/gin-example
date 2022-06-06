@@ -76,7 +76,7 @@ github.com/pmezard/go-difflib/difflib
 github.com/serenize/snaker
 # github.com/stretchr/objx v0.3.0
 github.com/stretchr/objx
-# github.com/stretchr/testify v1.7.1
+# github.com/stretchr/testify v1.7.2
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/mock
@@ -133,5 +133,5 @@ google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 # gopkg.in/yaml.v2 v2.4.0
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0
+# gopkg.in/yaml.v3 v3.0.1
 gopkg.in/yaml.v3
