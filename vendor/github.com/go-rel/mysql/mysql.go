@@ -14,7 +14,6 @@
 package mysql
 
 import (
-	"context"
 	db "database/sql"
 	"strings"
 
@@ -49,7 +48,7 @@ func New(database *db.DB) rel.Adapter {
 		DeleteBuilder:    deleteBuilder,
 		TableBuilder:     tableBuilder,
 		IndexBuilder:     indexBuilder,
-		IncrementFunc:    incrementFunc,
+		Increment:        getIncrement(database),
 		ErrorMapper:      errorMapper,
 		DB:               database,
 	}
@@ -57,6 +56,11 @@ func New(database *db.DB) rel.Adapter {
 
 // Open mysql connection using dsn.
 func Open(dsn string) (rel.Adapter, error) {
+	var database, err = db.Open("mysql", rewriteDsn(dsn))
+	return New(database), err
+}
+
+func rewriteDsn(dsn string) string {
 	// force clientFoundRows=true
 	// this allows not found record check when updating a record.
 	if strings.ContainsRune(dsn, '?') {
@@ -65,8 +69,7 @@ func Open(dsn string) (rel.Adapter, error) {
 		dsn += "?clientFoundRows=true"
 	}
 
-	var database, err = db.Open("mysql", dsn)
-	return New(database), err
+	return dsn
 }
 
 // MustOpen mysql connection using dsn.
@@ -79,19 +82,14 @@ func MustOpen(dsn string) rel.Adapter {
 	return adapter
 }
 
-func incrementFunc(adapter sql.SQL) int {
+func getIncrement(database *db.DB) int {
 	var (
 		variable  string
 		increment int
-		rows, err = adapter.DoQuery(context.TODO(), "SHOW VARIABLES LIKE 'auto_increment_increment';", nil)
+		row       = database.QueryRow("SHOW VARIABLES LIKE 'auto_increment_increment';")
 	)
 
-	check(err)
-
-	defer rows.Close()
-	rows.Next()
-	check(rows.Scan(&variable, &increment))
-
+	check(row.Scan(&variable, &increment))
 	return increment
 }
 
