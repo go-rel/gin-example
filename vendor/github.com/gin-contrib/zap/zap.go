@@ -12,15 +12,20 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
+
+type Fn func(c *gin.Context) []zapcore.Field
 
 // Config is config setting for Ginzap
 type Config struct {
 	TimeFormat string
 	UTC        bool
 	SkipPaths  []string
+	TraceID    bool // optionally log Open Telemetry TraceID
+	Context    Fn
 }
 
 // Ginzap returns a gin.HandlerFunc (middleware) that logs requests using uber-go/zap.
@@ -29,8 +34,8 @@ type Config struct {
 // Requests without errors are logged using zap.Info().
 //
 // It receives:
-//   1. A time package format string (e.g. time.RFC3339).
-//   2. A boolean stating whether to use UTC time zone or local.
+//  1. A time package format string (e.g. time.RFC3339).
+//  2. A boolean stating whether to use UTC time zone or local.
 func Ginzap(logger *zap.Logger, timeFormat string, utc bool) gin.HandlerFunc {
 	return GinzapWithConfig(logger, &Config{TimeFormat: timeFormat, UTC: utc})
 }
@@ -56,28 +61,40 @@ func GinzapWithConfig(logger *zap.Logger, conf *Config) gin.HandlerFunc {
 				end = end.UTC()
 			}
 
+			fields := []zapcore.Field{
+				zap.Int("status", c.Writer.Status()),
+				zap.String("method", c.Request.Method),
+				zap.String("path", path),
+				zap.String("query", query),
+				zap.String("ip", c.ClientIP()),
+				zap.String("user-agent", c.Request.UserAgent()),
+				zap.Duration("latency", latency),
+			}
+			if conf.TimeFormat != "" {
+				fields = append(fields, zap.String("time", end.Format(conf.TimeFormat)))
+			}
+			if conf.TraceID {
+				fields = append(fields, zap.String("traceID", trace.SpanFromContext(c.Request.Context()).SpanContext().TraceID().String()))
+			}
+
+			if conf.Context != nil {
+				fields = append(fields, conf.Context(c)...)
+			}
+
 			if len(c.Errors) > 0 {
 				// Append error field if this is an erroneous request.
 				for _, e := range c.Errors.Errors() {
-					logger.Error(e)
+					logger.Error(e, fields...)
 				}
 			} else {
-				fields := []zapcore.Field{
-					zap.Int("status", c.Writer.Status()),
-					zap.String("method", c.Request.Method),
-					zap.String("path", path),
-					zap.String("query", query),
-					zap.String("ip", c.ClientIP()),
-					zap.String("user-agent", c.Request.UserAgent()),
-					zap.Duration("latency", latency),
-				}
-				if conf.TimeFormat != "" {
-					fields = append(fields, zap.String("time", end.Format(conf.TimeFormat)))
-				}
 				logger.Info(path, fields...)
 			}
 		}
 	}
+}
+
+func defaultHandleRecovery(c *gin.Context, err interface{}) {
+	c.AbortWithStatus(http.StatusInternalServerError)
 }
 
 // RecoveryWithZap returns a gin.HandlerFunc (middleware)
@@ -86,6 +103,15 @@ func GinzapWithConfig(logger *zap.Logger, conf *Config) gin.HandlerFunc {
 // stack means whether output the stack info.
 // The stack info is easy to find where the error occurs but the stack info is too large.
 func RecoveryWithZap(logger *zap.Logger, stack bool) gin.HandlerFunc {
+	return CustomRecoveryWithZap(logger, stack, defaultHandleRecovery)
+}
+
+// CustomRecoveryWithZap returns a gin.HandlerFunc (middleware) with a custom recovery handler
+// that recovers from any panics and logs requests using uber-go/zap.
+// All errors are logged using zap.Error().
+// stack means whether output the stack info.
+// The stack info is easy to find where the error occurs but the stack info is too large.
+func CustomRecoveryWithZap(logger *zap.Logger, stack bool, recovery gin.RecoveryFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -126,7 +152,7 @@ func RecoveryWithZap(logger *zap.Logger, stack bool) gin.HandlerFunc {
 						zap.String("request", string(httpRequest)),
 					)
 				}
-				c.AbortWithStatus(http.StatusInternalServerError)
+				recovery(c, err)
 			}
 		}()
 		c.Next()
