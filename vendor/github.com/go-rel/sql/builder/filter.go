@@ -44,7 +44,7 @@ func (f Filter) Write(buffer *Buffer, table string, filter rel.FilterQuery, quer
 	case rel.FilterFragmentOp:
 		buffer.WriteString(filter.Field)
 		if !buffer.InlineValues {
-			buffer.AddArguments(filter.Value.([]interface{})...)
+			buffer.AddArguments(filter.Value.([]any)...)
 		}
 	}
 }
@@ -109,7 +109,7 @@ func (f Filter) WriteComparison(buffer *Buffer, table string, filter rel.FilterQ
 // WriteInclusion SQL to buffer.
 func (f Filter) WriteInclusion(buffer *Buffer, table string, filter rel.FilterQuery, queryWriter QueryWriter) {
 	var (
-		values = filter.Value.([]interface{})
+		values = filter.Value.([]any)
 	)
 
 	if len(values) == 0 {
@@ -131,7 +131,7 @@ func (f Filter) WriteInclusion(buffer *Buffer, table string, filter rel.FilterQu
 	}
 }
 
-func (f Filter) WriteInclusionValues(buffer *Buffer, values []interface{}, queryWriter QueryWriter) {
+func (f Filter) WriteInclusionValues(buffer *Buffer, values []any, queryWriter QueryWriter) {
 	if len(values) == 1 {
 		if value, ok := values[0].(rel.Query); ok {
 			f.WriteSubQuery(buffer, rel.SubQuery{Query: value}, queryWriter)

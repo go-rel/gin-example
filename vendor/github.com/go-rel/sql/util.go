@@ -82,7 +82,7 @@ func ExtractString(s, left, right string) string {
 	return s[start+len(left) : end]
 }
 
-func toInt64(i interface{}) int64 {
+func toInt64(i any) int64 {
 	var result int64
 
 	switch s := i.(type) {

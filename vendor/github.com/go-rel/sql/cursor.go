@@ -15,6 +15,6 @@ func (c *Cursor) Fields() ([]string, error) {
 }
 
 // NopScanner for this adapter.
-func (c *Cursor) NopScanner() interface{} {
+func (c *Cursor) NopScanner() any {
 	return &sql.RawBytes{}
 }

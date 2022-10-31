@@ -35,11 +35,11 @@ type Buffer struct {
 	BoolTrueValue       string
 	BoolFalseValue      string
 	valueCount          int
-	arguments           []interface{}
+	arguments           []any
 }
 
 // WriteValue query placeholder and append value to argument.
-func (b *Buffer) WriteValue(value interface{}) {
+func (b *Buffer) WriteValue(value any) {
 	if !b.InlineValues {
 		b.WritePlaceholder()
 		b.arguments = append(b.arguments, value)
@@ -170,7 +170,7 @@ func (b Buffer) escape(table, value string) string {
 }
 
 // AddArguments appends multiple arguments without writing placeholder query..
-func (b *Buffer) AddArguments(args ...interface{}) {
+func (b *Buffer) AddArguments(args ...any) {
 	if b.arguments == nil {
 		b.arguments = args
 	} else {
@@ -178,7 +178,7 @@ func (b *Buffer) AddArguments(args ...interface{}) {
 	}
 }
 
-func (b Buffer) Arguments() []interface{} {
+func (b Buffer) Arguments() []any {
 	return b.arguments
 }
 

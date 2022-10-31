@@ -39,11 +39,11 @@ func (s *SQL) Instrumentation(instrumenter rel.Instrumenter) {
 }
 
 // DoExec using active database connection.
-func (s SQL) DoExec(ctx context.Context, statement string, args []interface{}) (sql.Result, error) {
+func (s SQL) DoExec(ctx context.Context, statement string, args []any) (sql.Result, error) {
 	var (
 		err    error
 		result sql.Result
-		finish = s.Instrumenter.Observe(ctx, "adapter-exec", statement)
+		finish = s.Instrumenter.Observe(ctx, "adapter-exec", statement, args...)
 	)
 
 	if s.Tx != nil {
@@ -57,13 +57,13 @@ func (s SQL) DoExec(ctx context.Context, statement string, args []interface{}) (
 }
 
 // DoQuery using active database connection.
-func (s SQL) DoQuery(ctx context.Context, statement string, args []interface{}) (*sql.Rows, error) {
+func (s SQL) DoQuery(ctx context.Context, statement string, args []any) (*sql.Rows, error) {
 	var (
 		err  error
 		rows *sql.Rows
 	)
 
-	finish := s.Instrumenter.Observe(ctx, "adapter-query", statement)
+	finish := s.Instrumenter.Observe(ctx, "adapter-query", statement, args...)
 	if s.Tx != nil {
 		rows, err = s.Tx.QueryContext(ctx, statement, args...)
 	} else {
@@ -172,7 +172,7 @@ func (s SQL) Query(ctx context.Context, query rel.Query) (rel.Cursor, error) {
 }
 
 // Exec performs exec operation.
-func (s SQL) Exec(ctx context.Context, statement string, args []interface{}) (int64, int64, error) {
+func (s SQL) Exec(ctx context.Context, statement string, args []any) (int64, int64, error) {
 	var (
 		res, err = s.DoExec(ctx, statement, args)
 	)
@@ -206,7 +206,7 @@ func (s SQL) Aggregate(ctx context.Context, query rel.Query, mode string, field 
 }
 
 // Insert inserts a record to database and returns its id.
-func (s SQL) Insert(ctx context.Context, query rel.Query, primaryField string, mutates map[string]rel.Mutate, onConflict rel.OnConflict) (interface{}, error) {
+func (s SQL) Insert(ctx context.Context, query rel.Query, primaryField string, mutates map[string]rel.Mutate, onConflict rel.OnConflict) (any, error) {
 	var (
 		statement, args = s.InsertBuilder.Build(query.Table, primaryField, mutates, onConflict)
 		id, _, err      = s.Exec(ctx, statement, args)
@@ -216,7 +216,7 @@ func (s SQL) Insert(ctx context.Context, query rel.Query, primaryField string, m
 }
 
 // InsertAll inserts multiple records to database and returns its ids.
-func (s SQL) InsertAll(ctx context.Context, query rel.Query, primaryField string, fields []string, bulkMutates []map[string]rel.Mutate, onConflict rel.OnConflict) ([]interface{}, error) {
+func (s SQL) InsertAll(ctx context.Context, query rel.Query, primaryField string, fields []string, bulkMutates []map[string]rel.Mutate, onConflict rel.OnConflict) ([]any, error) {
 	var (
 		statement, args = s.InsertAllBuilder.Build(query.Table, primaryField, fields, bulkMutates, onConflict)
 		id, _, err      = s.Exec(ctx, statement, args)
@@ -227,7 +227,7 @@ func (s SQL) InsertAll(ctx context.Context, query rel.Query, primaryField string
 	}
 
 	var (
-		ids = make([]interface{}, len(bulkMutates))
+		ids = make([]any, len(bulkMutates))
 		inc = s.Increment
 	)
 

@@ -86,10 +86,12 @@ func getIncrement(database *db.DB) int {
 	var (
 		variable  string
 		increment int
-		row       = database.QueryRow("SHOW VARIABLES LIKE 'auto_increment_increment';")
 	)
 
-	check(row.Scan(&variable, &increment))
+	if database != nil {
+		check(database.QueryRow("SHOW VARIABLES LIKE 'auto_increment_increment';").Scan(&variable, &increment))
+	}
+
 	return increment
 }
 
