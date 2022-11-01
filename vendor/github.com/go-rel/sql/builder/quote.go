@@ -16,7 +16,7 @@ type Quoter interface {
 	// of a string will include all surrounding quotes.
 	//
 	// If a value type is not supported it must panic.
-	Value(v interface{}) string
+	Value(v any) string
 }
 
 // Quote is default implementation of Quoter interface.
@@ -32,7 +32,7 @@ func (q Quote) ID(name string) string {
 	return q.IDPrefix + strings.ReplaceAll(name, q.IDSuffix, q.IDSuffixEscapeChar+q.IDSuffix) + q.IDSuffix
 }
 
-func (q Quote) Value(v interface{}) string {
+func (q Quote) Value(v any) string {
 	switch v := v.(type) {
 	default:
 		panic("unsupported value")

@@ -12,7 +12,7 @@ type InsertAll struct {
 }
 
 // Build SQL string and its arguments.
-func (ia InsertAll) Build(table string, primaryField string, fields []string, bulkMutates []map[string]rel.Mutate, onConflict rel.OnConflict) (string, []interface{}) {
+func (ia InsertAll) Build(table string, primaryField string, fields []string, bulkMutates []map[string]rel.Mutate, onConflict rel.OnConflict) (string, []any) {
 	var (
 		buffer = ia.BufferFactory.Create()
 	)

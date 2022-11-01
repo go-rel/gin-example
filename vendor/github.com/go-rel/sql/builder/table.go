@@ -1,17 +1,20 @@
 package builder
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/go-rel/rel"
 )
 
 type ColumnMapper func(*rel.Column) (string, int, int)
+type DefinitionFilter func(table rel.Table, def rel.TableDefinition) bool
 
 // Table builder.
 type Table struct {
-	BufferFactory BufferFactory
-	ColumnMapper  ColumnMapper
+	BufferFactory    BufferFactory
+	ColumnMapper     ColumnMapper
+	DefinitionFilter DefinitionFilter
 }
 
 // Build SQL query for table creation and modification.
@@ -36,6 +39,8 @@ func (t Table) Build(table rel.Table) string {
 
 // WriteCreateTable query to buffer.
 func (t Table) WriteCreateTable(buffer *Buffer, table rel.Table) {
+	defs := t.definitions(table)
+
 	buffer.WriteString("CREATE TABLE ")
 
 	if table.Optional {
@@ -43,10 +48,10 @@ func (t Table) WriteCreateTable(buffer *Buffer, table rel.Table) {
 	}
 
 	buffer.WriteEscape(table.Name)
-	if len(table.Definitions) > 0 {
+	if len(defs) > 0 {
 		buffer.WriteString(" (")
 
-		for i, def := range table.Definitions {
+		for i, def := range defs {
 			if i > 0 {
 				buffer.WriteString(", ")
 			}
@@ -68,7 +73,9 @@ func (t Table) WriteCreateTable(buffer *Buffer, table rel.Table) {
 
 // WriteAlterTable query to buffer.
 func (t Table) WriteAlterTable(buffer *Buffer, table rel.Table) {
-	for _, def := range table.Definitions {
+	defs := t.definitions(table)
+
+	for _, def := range defs {
 		buffer.WriteString("ALTER TABLE ")
 		buffer.WriteEscape(table.Name)
 		buffer.WriteByte(' ')
@@ -227,4 +234,22 @@ func (t Table) WriteOptions(buffer *Buffer, options string) {
 
 	buffer.WriteByte(' ')
 	buffer.WriteString(options)
+}
+
+func (t Table) definitions(table rel.Table) []rel.TableDefinition {
+	if t.DefinitionFilter == nil {
+		return table.Definitions
+	}
+
+	result := []rel.TableDefinition{}
+
+	for _, def := range table.Definitions {
+		if t.DefinitionFilter(table, def) {
+			result = append(result, def)
+		} else {
+			log.Printf("[REL] An unsupported table definition has been excluded: %T", def)
+		}
+	}
+
+	return result
 }

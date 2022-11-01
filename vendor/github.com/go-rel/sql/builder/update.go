@@ -12,7 +12,7 @@ type Update struct {
 }
 
 // Build SQL string and it arguments.
-func (u Update) Build(table string, primaryField string, mutates map[string]rel.Mutate, filter rel.FilterQuery) (string, []interface{}) {
+func (u Update) Build(table string, primaryField string, mutates map[string]rel.Mutate, filter rel.FilterQuery) (string, []any) {
 	var (
 		buffer = u.BufferFactory.Create()
 	)
@@ -45,7 +45,7 @@ func (u Update) Build(table string, primaryField string, mutates map[string]rel.
 			buffer.WriteValue(mut.Value)
 		case rel.ChangeFragmentOp:
 			buffer.WriteString(field)
-			buffer.AddArguments(mut.Value.([]interface{})...)
+			buffer.AddArguments(mut.Value.([]any)...)
 		}
 	}
 

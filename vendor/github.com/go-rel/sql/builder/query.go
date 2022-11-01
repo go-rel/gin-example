@@ -18,7 +18,7 @@ type Query struct {
 }
 
 // Build SQL string and it arguments.
-func (q Query) Build(query rel.Query) (string, []interface{}) {
+func (q Query) Build(query rel.Query) (string, []any) {
 	var (
 		buffer = q.BufferFactory.Create()
 	)
