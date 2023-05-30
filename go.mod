@@ -11,7 +11,7 @@ require (
 	github.com/go-rel/rel v0.39.0
 	github.com/go-rel/reltest v0.11.0
 	github.com/go-sql-driver/mysql v1.7.1
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.24.0
 )
 
