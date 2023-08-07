@@ -85,7 +85,7 @@ func (q Query) WriteQuery(buffer *Buffer, query rel.Query) {
 	}
 
 	q.WriteOrderBy(buffer, query.Table, query.SortQuery)
-	q.WriteLimitOffet(buffer, query.LimitQuery, query.OffsetQuery)
+	q.WriteLimitOffset(buffer, query.LimitQuery, query.OffsetQuery)
 
 	if query.LockQuery != "" {
 		buffer.WriteByte(' ')
@@ -197,8 +197,8 @@ func (q Query) WriteOrderBy(buffer *Buffer, table string, orders []rel.SortQuery
 	}
 }
 
-// WriteLimitOffet SQL to buffer.
-func (q Query) WriteLimitOffet(buffer *Buffer, limit rel.Limit, offset rel.Offset) {
+// WriteLimitOffset SQL to buffer.
+func (q Query) WriteLimitOffset(buffer *Buffer, limit rel.Limit, offset rel.Offset) {
 	if limit > 0 {
 		buffer.WriteString(" LIMIT ")
 		buffer.WriteString(strconv.Itoa(int(limit)))

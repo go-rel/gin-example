@@ -197,9 +197,14 @@ func (s SQL) Aggregate(ctx context.Context, query rel.Query, mode string, field 
 		rows, err       = s.DoQuery(ctx, statement, args)
 	)
 
+	if err != nil {
+		return 0, s.ErrorMapper(err)
+	}
+
 	defer rows.Close()
-	if err == nil && rows.Next() {
-		rows.Scan(&out)
+
+	if rows.Next() {
+		err = rows.Scan(&out)
 	}
 
 	return int(out.Int64), s.ErrorMapper(err)

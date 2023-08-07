@@ -8,12 +8,14 @@ import (
 )
 
 type ColumnMapper func(*rel.Column) (string, int, int)
+type DropKeyMapper func(rel.KeyType) string
 type DefinitionFilter func(table rel.Table, def rel.TableDefinition) bool
 
 // Table builder.
 type Table struct {
 	BufferFactory    BufferFactory
 	ColumnMapper     ColumnMapper
+	DropKeyMapper    DropKeyMapper
 	DefinitionFilter DefinitionFilter
 }
 
@@ -102,6 +104,11 @@ func (t Table) WriteAlterTable(buffer *Buffer, table rel.Table) {
 			case rel.SchemaCreate:
 				buffer.WriteString("ADD ")
 				t.WriteKey(buffer, v)
+			case rel.SchemaDrop:
+				buffer.WriteString("DROP ")
+				buffer.WriteString(t.DropKeyMapper(v.Type))
+				buffer.WriteString(" ")
+				buffer.WriteEscape(v.Name)
 			}
 		}
 

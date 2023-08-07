@@ -1,6 +1,7 @@
 // Package mysql wraps mysql driver as an adapter for REL.
 //
 // Usage:
+//
 //	// open mysql connection.
 //	// note: `clientFoundRows=true` is required for update and delete to works correctly.
 //	adapter, err := mysql.Open("root@(127.0.0.1:3306)/rel_test?clientFoundRows=true&charset=utf8&parseTime=True&loc=Local")
@@ -15,6 +16,7 @@ package mysql
 
 import (
 	db "database/sql"
+	"fmt"
 	"strings"
 
 	"github.com/go-rel/rel"
@@ -36,7 +38,7 @@ func New(database *db.DB) rel.Adapter {
 		deleteBuilder     = builder.Delete{BufferFactory: bufferFactory, Query: queryBuilder, Filter: filterBuilder}
 		ddlBufferFactory  = builder.BufferFactory{InlineValues: true, BoolTrueValue: "true", BoolFalseValue: "false", Quoter: Quote{}, ValueConverter: ValueConvert{}}
 		ddlQueryBuilder   = builder.Query{BufferFactory: ddlBufferFactory, Filter: filterBuilder}
-		tableBuilder      = builder.Table{BufferFactory: ddlBufferFactory, ColumnMapper: columnMapper}
+		tableBuilder      = builder.Table{BufferFactory: ddlBufferFactory, ColumnMapper: columnMapper, DropKeyMapper: dropKeyMapper}
 		indexBuilder      = builder.Index{BufferFactory: ddlBufferFactory, Query: ddlQueryBuilder, Filter: filterBuilder, DropIndexOnTable: true}
 	)
 
@@ -135,6 +137,14 @@ func columnMapper(column *rel.Column) (string, int, int) {
 	default:
 		return sql.ColumnMapper(column)
 	}
+}
+
+func dropKeyMapper(typ rel.KeyType) string {
+	if typ == rel.ForeignKey {
+		return "FOREIGN KEY"
+	}
+
+	panic(fmt.Sprintf("drop key: unsupported key type `%s`", typ))
 }
 
 func check(err error) {
