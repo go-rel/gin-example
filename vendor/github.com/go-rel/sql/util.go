@@ -10,6 +10,10 @@ import (
 // DefaultTimeLayout default time layout.
 const DefaultTimeLayout = "2006-01-02 15:04:05"
 
+func DropKeyMapper(keyType rel.KeyType) string {
+	return "CONSTRAINT"
+}
+
 // ColumnMapper function.
 func ColumnMapper(column *rel.Column) (string, int, int) {
 	var (
