@@ -41,8 +41,8 @@ github.com/go-playground/validator/v10 v10.14.0/go.mod h1:9iXMNT7sEkjXb0I+enO7QX
 github.com/go-rel/mysql v0.10.0 h1:2K6NT3e2OIhvJZWswzDnwNLLsbeIX+7SQg+kUYYdPBY=
 github.com/go-rel/mysql v0.10.0/go.mod h1:aDRiKtGFj+xzOorJWYt1IEAUhoRnMxWlFQ7o0RZzspE=
 github.com/go-rel/primaryreplica v0.4.0 h1:lhU+4dh0/sDQEs602Chiz0SJDXewPU06baWQlx7oB3c=
-github.com/go-rel/rel v0.39.0 h1:2zmK8kazM82iRRfWX7+mm1MxDkGKDj2W+xJLjguli5U=
-github.com/go-rel/rel v0.39.0/go.mod h1:yN6+aimHyRIzbuWFe5DaxiZPuVuPfd7GlLpy/YTqTUg=
+github.com/go-rel/rel v0.40.0 h1:Av2/Ub6fQn6UbwxTIHStfLb7W+knRhOVX8AWcC+pOBA=
+github.com/go-rel/rel v0.40.0/go.mod h1:6opWRxsoHoDq67fIDnsmcmnojpskWpPqCs0AoL/UrEU=
 github.com/go-rel/reltest v0.11.0 h1:X9UsgZlk4zHAQlckQ5iRCE7GG1ZT2VpbLEca/dnEmYQ=
 github.com/go-rel/reltest v0.11.0/go.mod h1:NWpBpRcdzy7UU6/KZtJVLOvCKoiNcQEWYEZ9//cCaTw=
 github.com/go-rel/sql v0.14.0 h1:pTg40wvSrOr9cNcm76mHqPe0oRg6CRf92xfH6A3+y/g=
