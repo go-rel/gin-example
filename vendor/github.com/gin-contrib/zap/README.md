@@ -25,7 +25,7 @@ import "github.com/gin-contrib/zap"
 
 ## Example
 
-See the [example](example/main.go).
+See the [example](_example/example01/main.go).
 
 ```go
 package main
@@ -83,45 +83,9 @@ r.Use(GinzapWithConfig(utcLogger, &Config{
 }))
 ```
 
-## Log TraceID
-
-If you want to log [Open Telemetry](https://opentelemetry.io/) TraceID, use `GinzapWithConfig`.
-
-```go
-import "go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
-
-r.Use(otelgin.Middleware("demo")) // middleware to extract trace from http request
-
-r.Use(ginzap.GinzapWithConfig(logger, &ginzap.Config{
-  TimeFormat: time.RFC3339,
-  UTC: true,
-  TraceID: true,
-}))
-```
-
-This will add the `traceId` field to log:
-
-```json
-{
-  "level": "info",
-  "ts": 1658442963.805288,
-  "caller": "ginzap/zap.go:82",
-  "msg": "/test",
-  "status": 200,
-  "method": "GET",
-  "path": "/test",
-  "query": "",
-  "ip": "127.0.0.1",
-  "user-agent": "curl/7.29.0",
-  "latency": 0.002036414,
-  "time": "2022-07-21T22:36:03Z",
-  "traceID": "285f31ec1dba4b79034c4415ad18e4ed"
-}
-```
-
 ## Custom Zap fields
 
-example for custom log request body and response request ID
+example for custom log request body, response request ID or log [Open Telemetry](https://opentelemetry.io/) TraceID.
 
 ```go
 func main() {
@@ -132,10 +96,17 @@ func main() {
   r.Use(ginzap.GinzapWithConfig(logger, &ginzap.Config{
     UTC:        true,
     TimeFormat: time.RFC3339,
-    Context: ginzap.Fn(func(c *gin.Context) (fields []zapcore.Field) {
-      // log response ID
+    Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
+      fields := []zapcore.Field{}
+      // log request ID
       if requestID := c.Writer.Header().Get("X-Request-Id"); requestID != "" {
-        fields = append(fields, zap.String("request-id", requestID))
+        fields = append(fields, zap.String("request_id", requestID))
+      }
+
+      // log trace and span ID
+      if trace.SpanFromContext(c.Request.Context()).SpanContext().IsValid() {
+        fields = append(fields, zap.String("trace_id", trace.SpanFromContext(c.Request.Context()).SpanContext().TraceID().String()))
+        fields = append(fields, zap.String("span_id", trace.SpanFromContext(c.Request.Context()).SpanContext().SpanID().String()))
       }
 
       // log request body
@@ -146,7 +117,7 @@ func main() {
       c.Request.Body = io.NopCloser(&buf)
       fields = append(fields, zap.String("body", string(body)))
 
-      return
+      return fields
     }),
   }))
 
