@@ -12,7 +12,7 @@ require (
 	github.com/go-rel/reltest v0.11.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/stretchr/testify v1.8.4
-	go.uber.org/zap v1.25.0
+	go.uber.org/zap v1.26.0
 )
 
 require (
