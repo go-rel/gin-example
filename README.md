@@ -30,7 +30,8 @@ Feature:
     ```
     cp .env.sample .env
     ```
-2. Start mysql and create database.
+2. Start mysql and create database. [^mac]
+   [^mac]: Regular MySQL Docker images are not built for the new Mac ARM processors. To use a MySQL docker image that works on ARM, you may update [docker-compose.yml#L5](docker-compose.yml#L5) to use a different one, such as `image: "arm64v8/mysql:latest"` instead of `image: "mysql:latest"`. See [Dockerhub arm64v8/mysql](https://hub.docker.com/r/arm64v8/mysql) for more details. 
     ```
     docker-compose up -d
     ```
