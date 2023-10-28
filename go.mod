@@ -8,7 +8,7 @@ require (
 	github.com/gin-contrib/zap v0.2.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-rel/mysql v0.10.0
-	github.com/go-rel/rel v0.40.0
+	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/reltest v0.11.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/stretchr/testify v1.8.4
