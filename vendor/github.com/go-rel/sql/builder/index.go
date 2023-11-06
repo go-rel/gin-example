@@ -46,7 +46,7 @@ func (i Index) WriteCreateIndex(buffer *Buffer, index rel.Index) {
 
 	buffer.WriteEscape(index.Name)
 	buffer.WriteString(" ON ")
-	buffer.WriteEscape(index.Table)
+	buffer.WriteTable(index.Table)
 
 	buffer.WriteString(" (")
 	for n, col := range index.Columns {
@@ -78,7 +78,7 @@ func (i Index) WriteDropIndex(buffer *Buffer, index rel.Index) {
 
 	if i.DropIndexOnTable {
 		buffer.WriteString(" ON ")
-		buffer.WriteEscape(index.Table)
+		buffer.WriteTable(index.Table)
 	}
 }
 

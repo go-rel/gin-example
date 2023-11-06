@@ -66,18 +66,18 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.15.3
 ## explicit; go 1.18
 github.com/go-playground/validator/v10
-# github.com/go-rel/mysql v0.10.0
-## explicit; go 1.20
+# github.com/go-rel/mysql v0.11.0
+## explicit; go 1.21
 github.com/go-rel/mysql
-# github.com/go-rel/rel v0.40.0
+# github.com/go-rel/rel v0.41.0
 ## explicit; go 1.21
 github.com/go-rel/rel
 github.com/go-rel/rel/where
 # github.com/go-rel/reltest v0.11.0
 ## explicit; go 1.19
 github.com/go-rel/reltest
-# github.com/go-rel/sql v0.14.0
-## explicit; go 1.19
+# github.com/go-rel/sql v0.16.0
+## explicit; go 1.21
 github.com/go-rel/sql
 github.com/go-rel/sql/builder
 # github.com/go-sql-driver/mysql v1.7.1
@@ -220,8 +220,6 @@ google.golang.org/protobuf/proto
 google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
-# gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
-## explicit
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

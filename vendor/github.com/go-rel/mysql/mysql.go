@@ -24,6 +24,14 @@ import (
 	"github.com/go-rel/sql/builder"
 )
 
+// MySQL adapter.
+type MySQL struct {
+	sql.SQL
+}
+
+// Name of database type this adapter implements.
+const Name string = "mysql"
+
 // New mysql adapter using existing connection.
 // Existing connection needs to be created with `clientFoundRows=true` options for update and delete to works correctly.
 func New(database *db.DB) rel.Adapter {
@@ -38,27 +46,31 @@ func New(database *db.DB) rel.Adapter {
 		deleteBuilder     = builder.Delete{BufferFactory: bufferFactory, Query: queryBuilder, Filter: filterBuilder}
 		ddlBufferFactory  = builder.BufferFactory{InlineValues: true, BoolTrueValue: "true", BoolFalseValue: "false", Quoter: Quote{}, ValueConverter: ValueConvert{}}
 		ddlQueryBuilder   = builder.Query{BufferFactory: ddlBufferFactory, Filter: filterBuilder}
-		tableBuilder      = builder.Table{BufferFactory: ddlBufferFactory, ColumnMapper: columnMapper, DropKeyMapper: dropKeyMapper}
+		tableBuilder      = builder.Table{BufferFactory: ddlBufferFactory, ColumnMapper: columnMapper, ColumnOptionsMapper: sql.ColumnOptionsMapper, DropKeyMapper: dropKeyMapper}
 		indexBuilder      = builder.Index{BufferFactory: ddlBufferFactory, Query: ddlQueryBuilder, Filter: filterBuilder, DropIndexOnTable: true}
 	)
 
-	return &sql.SQL{
-		QueryBuilder:     queryBuilder,
-		InsertBuilder:    InsertBuilder,
-		InsertAllBuilder: insertAllBuilder,
-		UpdateBuilder:    updateBuilder,
-		DeleteBuilder:    deleteBuilder,
-		TableBuilder:     tableBuilder,
-		IndexBuilder:     indexBuilder,
-		Increment:        getIncrement(database),
-		ErrorMapper:      errorMapper,
-		DB:               database,
+	return &MySQL{
+		SQL: sql.SQL{
+			QueryBuilder:     queryBuilder,
+			InsertBuilder:    InsertBuilder,
+			InsertAllBuilder: insertAllBuilder,
+			UpdateBuilder:    updateBuilder,
+			DeleteBuilder:    deleteBuilder,
+			TableBuilder:     tableBuilder,
+			IndexBuilder:     indexBuilder,
+			Increment:        getIncrement(database),
+			ErrorMapper:      errorMapper,
+			DB:               database,
+		},
 	}
 }
 
+var dbOpen = db.Open
+
 // Open mysql connection using dsn.
 func Open(dsn string) (rel.Adapter, error) {
-	var database, err = db.Open("mysql", rewriteDsn(dsn))
+	database, err := dbOpen("mysql", rewriteDsn(dsn))
 	return New(database), err
 }
 
@@ -66,22 +78,23 @@ func rewriteDsn(dsn string) string {
 	// force clientFoundRows=true
 	// this allows not found record check when updating a record.
 	if strings.ContainsRune(dsn, '?') {
-		dsn += "&clientFoundRows=true"
-	} else {
-		dsn += "?clientFoundRows=true"
+		return dsn + "&clientFoundRows=true"
 	}
-
-	return dsn
+	return dsn + "?clientFoundRows=true"
 }
 
 // MustOpen mysql connection using dsn.
 func MustOpen(dsn string) rel.Adapter {
-	var (
-		adapter, err = Open(dsn)
-	)
-
-	check(err)
+	adapter, err := Open(dsn)
+	if err != nil {
+		panic(err)
+	}
 	return adapter
+}
+
+// Name of database adapter.
+func (MySQL) Name() string {
+	return Name
 }
 
 func getIncrement(database *db.DB) int {
@@ -91,7 +104,10 @@ func getIncrement(database *db.DB) int {
 	)
 
 	if database != nil {
-		check(database.QueryRow("SHOW VARIABLES LIKE 'auto_increment_increment';").Scan(&variable, &increment))
+		err := database.QueryRow("SHOW VARIABLES LIKE 'auto_increment_increment';").Scan(&variable, &increment)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return increment
@@ -145,10 +161,4 @@ func dropKeyMapper(typ rel.KeyType) string {
 	}
 
 	panic(fmt.Sprintf("drop key: unsupported key type `%s`", typ))
-}
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

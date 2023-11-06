@@ -7,8 +7,8 @@ require (
 	github.com/gin-contrib/requestid v0.0.6
 	github.com/gin-contrib/zap v0.2.0
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-rel/mysql v0.10.0
-	github.com/go-rel/rel v0.40.0
+	github.com/go-rel/mysql v0.11.0
+	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/reltest v0.11.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/stretchr/testify v1.8.4
@@ -25,7 +25,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.15.3 // indirect
-	github.com/go-rel/sql v0.14.0 // indirect
+	github.com/go-rel/sql v0.16.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -49,6 +49,5 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

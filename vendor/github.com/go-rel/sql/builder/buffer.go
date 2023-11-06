@@ -30,6 +30,7 @@ type Buffer struct {
 	Quoter              Quoter
 	ValueConverter      driver.ValueConverter
 	ArgumentPlaceholder string
+	AllowTableSchema    bool
 	ArgumentOrdinal     bool
 	InlineValues        bool
 	BoolTrueValue       string
@@ -47,7 +48,7 @@ func (b *Buffer) WriteValue(value any) {
 	}
 
 	// Detect float bits to not lose precision after converting to float64
-	var floatBits = 64
+	floatBits := 64
 	if value != nil && reflect.TypeOf(value).Kind() == reflect.Float32 {
 		floatBits = 32
 	}
@@ -109,6 +110,11 @@ func (b *Buffer) WriteField(table, field string) {
 	b.WriteString(b.escape(table, field))
 }
 
+// WriteTable writes table name.
+func (b *Buffer) WriteTable(table string) {
+	b.WriteString(b.escape(table, ""))
+}
+
 // WriteEscape string.
 func (b *Buffer) WriteEscape(value string) {
 	b.WriteString(b.escape("", value))
@@ -127,7 +133,10 @@ func (b Buffer) escape(table, value string) string {
 
 	var escaped_table string
 	if table != "" {
-		if strings.IndexByte(table, '.') >= 0 {
+		if i := strings.Index(strings.ToLower(table), " as "); i > -1 {
+			return b.escape(table[:i], "") + " AS " + b.Quoter.ID(table[i+4:])
+		}
+		if b.AllowTableSchema && strings.IndexByte(table, '.') >= 0 {
 			parts := strings.Split(table, ".")
 			for i, part := range parts {
 				part = strings.TrimSpace(part)
@@ -135,11 +144,13 @@ func (b Buffer) escape(table, value string) string {
 			}
 			escaped_table = strings.Join(parts, ".")
 		} else {
-			escaped_table = b.Quoter.ID(table)
+			escaped_table = b.Quoter.ID(strings.ReplaceAll(table, ".", "_"))
 		}
 	}
 
-	if value == "*" {
+	if value == "" {
+		escapedValue = escaped_table
+	} else if value == "*" {
 		escapedValue = escaped_table + ".*"
 	} else if len(value) > 0 && value[0] == UnescapeCharacter {
 		escapedValue = value[1:]
@@ -193,6 +204,7 @@ func (b *Buffer) Reset() {
 type BufferFactory struct {
 	Quoter              Quoter
 	ValueConverter      driver.ValueConverter
+	AllowTableSchema    bool
 	ArgumentPlaceholder string
 	ArgumentOrdinal     bool
 	InlineValues        bool
@@ -208,6 +220,7 @@ func (bf BufferFactory) Create() Buffer {
 	return Buffer{
 		Quoter:              bf.Quoter,
 		ValueConverter:      conv,
+		AllowTableSchema:    bf.AllowTableSchema,
 		ArgumentPlaceholder: bf.ArgumentPlaceholder,
 		ArgumentOrdinal:     bf.ArgumentOrdinal,
 		InlineValues:        bf.InlineValues,

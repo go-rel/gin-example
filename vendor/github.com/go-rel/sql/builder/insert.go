@@ -14,9 +14,7 @@ type Insert struct {
 
 // Build sql query and its arguments.
 func (i Insert) Build(table string, primaryField string, mutates map[string]rel.Mutate, onConflict rel.OnConflict) (string, []any) {
-	var (
-		buffer = i.BufferFactory.Create()
-	)
+	buffer := i.BufferFactory.Create()
 
 	i.WriteInsertInto(&buffer, table)
 	i.WriteValues(&buffer, mutates)
@@ -30,13 +28,11 @@ func (i Insert) Build(table string, primaryField string, mutates map[string]rel.
 
 func (i Insert) WriteInsertInto(buffer *Buffer, table string) {
 	buffer.WriteString("INSERT INTO ")
-	buffer.WriteEscape(table)
+	buffer.WriteTable(table)
 }
 
 func (i Insert) WriteValues(buffer *Buffer, mutates map[string]rel.Mutate) {
-	var (
-		count = len(mutates)
-	)
+	count := len(mutates)
 
 	if count == 0 && i.InsertDefaultValues {
 		buffer.WriteString(" DEFAULT VALUES")
