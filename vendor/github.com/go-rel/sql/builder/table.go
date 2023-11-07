@@ -7,23 +7,25 @@ import (
 	"github.com/go-rel/rel"
 )
 
-type ColumnMapper func(*rel.Column) (string, int, int)
-type DropKeyMapper func(rel.KeyType) string
-type DefinitionFilter func(table rel.Table, def rel.TableDefinition) bool
+type (
+	ColumnMapper        func(*rel.Column) (string, int, int)
+	ColumnOptionsMapper func(*rel.Column) string
+	DropKeyMapper       func(rel.KeyType) string
+	DefinitionFilter    func(table rel.Table, def rel.TableDefinition) bool
+)
 
 // Table builder.
 type Table struct {
-	BufferFactory    BufferFactory
-	ColumnMapper     ColumnMapper
-	DropKeyMapper    DropKeyMapper
-	DefinitionFilter DefinitionFilter
+	BufferFactory       BufferFactory
+	ColumnMapper        ColumnMapper
+	ColumnOptionsMapper ColumnOptionsMapper
+	DropKeyMapper       DropKeyMapper
+	DefinitionFilter    DefinitionFilter
 }
 
 // Build SQL query for table creation and modification.
 func (t Table) Build(table rel.Table) string {
-	var (
-		buffer = t.BufferFactory.Create()
-	)
+	buffer := t.BufferFactory.Create()
 
 	switch table.Op {
 	case rel.SchemaCreate:
@@ -49,7 +51,7 @@ func (t Table) WriteCreateTable(buffer *Buffer, table rel.Table) {
 		buffer.WriteString("IF NOT EXISTS ")
 	}
 
-	buffer.WriteEscape(table.Name)
+	buffer.WriteTable(table.Name)
 	if len(defs) > 0 {
 		buffer.WriteString(" (")
 
@@ -79,7 +81,7 @@ func (t Table) WriteAlterTable(buffer *Buffer, table rel.Table) {
 
 	for _, def := range defs {
 		buffer.WriteString("ALTER TABLE ")
-		buffer.WriteEscape(table.Name)
+		buffer.WriteTable(table.Name)
 		buffer.WriteByte(' ')
 
 		switch v := def.(type) {
@@ -120,9 +122,9 @@ func (t Table) WriteAlterTable(buffer *Buffer, table rel.Table) {
 // WriteRenameTable query to buffer.
 func (t Table) WriteRenameTable(buffer *Buffer, table rel.Table) {
 	buffer.WriteString("ALTER TABLE ")
-	buffer.WriteEscape(table.Name)
+	buffer.WriteTable(table.Name)
 	buffer.WriteString(" RENAME TO ")
-	buffer.WriteEscape(table.Rename)
+	buffer.WriteTable(table.Rename)
 	buffer.WriteByte(';')
 }
 
@@ -134,15 +136,13 @@ func (t Table) WriteDropTable(buffer *Buffer, table rel.Table) {
 		buffer.WriteString("IF EXISTS ")
 	}
 
-	buffer.WriteEscape(table.Name)
+	buffer.WriteTable(table.Name)
 	buffer.WriteByte(';')
 }
 
 // WriteColumn definition to buffer.
 func (t Table) WriteColumn(buffer *Buffer, column rel.Column) {
-	var (
-		typ, m, n = t.ColumnMapper(&column)
-	)
+	typ, m, n := t.ColumnMapper(&column)
 
 	buffer.WriteEscape(column.Name)
 	buffer.WriteByte(' ')
@@ -160,20 +160,9 @@ func (t Table) WriteColumn(buffer *Buffer, column rel.Column) {
 		buffer.WriteByte(')')
 	}
 
-	if column.Unsigned {
-		buffer.WriteString(" UNSIGNED")
-	}
-
-	if column.Unique {
-		buffer.WriteString(" UNIQUE")
-	}
-
-	if column.Required {
-		buffer.WriteString(" NOT NULL")
-	}
-
-	if column.Primary {
-		buffer.WriteString(" PRIMARY KEY")
+	if opts := t.ColumnOptionsMapper(&column); opts != "" {
+		buffer.WriteByte(' ')
+		buffer.WriteString(opts)
 	}
 
 	if column.Default != nil {
@@ -186,9 +175,7 @@ func (t Table) WriteColumn(buffer *Buffer, column rel.Column) {
 
 // WriteKey definition to buffer.
 func (t Table) WriteKey(buffer *Buffer, key rel.Key) {
-	var (
-		typ = string(key.Type)
-	)
+	typ := string(key.Type)
 
 	buffer.WriteString(typ)
 
@@ -208,7 +195,7 @@ func (t Table) WriteKey(buffer *Buffer, key rel.Key) {
 
 	if key.Type == rel.ForeignKey {
 		buffer.WriteString(" REFERENCES ")
-		buffer.WriteEscape(key.Reference.Table)
+		buffer.WriteTable(key.Reference.Table)
 
 		buffer.WriteString(" (")
 		for i, col := range key.Reference.Columns {

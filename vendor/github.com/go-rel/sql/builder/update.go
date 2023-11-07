@@ -13,12 +13,10 @@ type Update struct {
 
 // Build SQL string and it arguments.
 func (u Update) Build(table string, primaryField string, mutates map[string]rel.Mutate, filter rel.FilterQuery) (string, []any) {
-	var (
-		buffer = u.BufferFactory.Create()
-	)
+	buffer := u.BufferFactory.Create()
 
 	buffer.WriteString("UPDATE ")
-	buffer.WriteEscape(table)
+	buffer.WriteTable(table)
 	buffer.WriteString(" SET ")
 
 	i := 0

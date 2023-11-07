@@ -13,9 +13,7 @@ type InsertAll struct {
 
 // Build SQL string and its arguments.
 func (ia InsertAll) Build(table string, primaryField string, fields []string, bulkMutates []map[string]rel.Mutate, onConflict rel.OnConflict) (string, []any) {
-	var (
-		buffer = ia.BufferFactory.Create()
-	)
+	buffer := ia.BufferFactory.Create()
 
 	ia.WriteInsertInto(&buffer, table)
 	ia.WriteValues(&buffer, fields, bulkMutates)
@@ -28,7 +26,7 @@ func (ia InsertAll) Build(table string, primaryField string, fields []string, bu
 
 func (ia InsertAll) WriteInsertInto(buffer *Buffer, table string) {
 	buffer.WriteString("INSERT INTO ")
-	buffer.WriteEscape(table)
+	buffer.WriteTable(table)
 }
 
 func (ia InsertAll) WriteValues(buffer *Buffer, fields []string, bulkMutates []map[string]rel.Mutate) {

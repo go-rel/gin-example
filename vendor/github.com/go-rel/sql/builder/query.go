@@ -19,9 +19,7 @@ type Query struct {
 
 // Build SQL string and it arguments.
 func (q Query) Build(query rel.Query) (string, []any) {
-	var (
-		buffer = q.BufferFactory.Create()
-	)
+	buffer := q.BufferFactory.Create()
 
 	q.Write(&buffer, query)
 
@@ -96,7 +94,7 @@ func (q Query) WriteQuery(buffer *Buffer, query rel.Query) {
 // WriteFrom SQL to buffer.
 func (q Query) WriteFrom(buffer *Buffer, table string) {
 	buffer.WriteString(" FROM ")
-	buffer.WriteEscape(table)
+	buffer.WriteTable(table)
 }
 
 // WriteJoin SQL to buffer.
@@ -111,10 +109,16 @@ func (q Query) WriteJoin(buffer *Buffer, table string, joins []rel.JoinQuery) {
 			to   = join.To
 		)
 
+		jtable := join.Table
+		// If join table has alias use that for filter conditions
+		if i := strings.Index(strings.ToLower(jtable), " as "); i > -1 {
+			jtable = jtable[i+4:]
+		}
+
 		// TODO: move this to core functionality, and infer join condition using assoc data.
 		if join.Arguments == nil && (join.From == "" || join.To == "") {
 			from = table + "." + strings.TrimSuffix(join.Table, "s") + "_id"
-			to = join.Table + ".id"
+			to = jtable + ".id"
 		}
 
 		buffer.WriteByte(' ')
@@ -122,14 +126,14 @@ func (q Query) WriteJoin(buffer *Buffer, table string, joins []rel.JoinQuery) {
 		buffer.WriteByte(' ')
 
 		if join.Table != "" {
-			buffer.WriteEscape(join.Table)
+			buffer.WriteTable(join.Table)
 			buffer.WriteString(" ON ")
 			buffer.WriteEscape(from)
 			buffer.WriteString("=")
 			buffer.WriteEscape(to)
 			if !join.Filter.None() {
 				buffer.WriteString(" AND ")
-				q.Filter.Write(buffer, join.Table, join.Filter, q)
+				q.Filter.Write(buffer, jtable, join.Filter, q)
 			}
 		}
 
@@ -173,9 +177,7 @@ func (q Query) WriteHaving(buffer *Buffer, table string, filter rel.FilterQuery)
 
 // WriteOrderBy SQL to buffer.
 func (q Query) WriteOrderBy(buffer *Buffer, table string, orders []rel.SortQuery) {
-	var (
-		length = len(orders)
-	)
+	length := len(orders)
 
 	if length == 0 {
 		return
