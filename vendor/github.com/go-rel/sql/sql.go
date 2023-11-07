@@ -33,6 +33,11 @@ type SQL struct {
 	Instrumenter     rel.Instrumenter
 }
 
+// Name returns database adapter name.
+func (s SQL) Name() string {
+	return "sql"
+}
+
 // Instrumentation set instrumenter for this adapter.
 func (s *SQL) Instrumentation(instrumenter rel.Instrumenter) {
 	s.Instrumenter = instrumenter
@@ -173,10 +178,7 @@ func (s SQL) Query(ctx context.Context, query rel.Query) (rel.Cursor, error) {
 
 // Exec performs exec operation.
 func (s SQL) Exec(ctx context.Context, statement string, args []any) (int64, int64, error) {
-	var (
-		res, err = s.DoExec(ctx, statement, args)
-	)
-
+	res, err := s.DoExec(ctx, statement, args)
 	if err != nil {
 		return 0, 0, s.ErrorMapper(err)
 	}
@@ -284,9 +286,7 @@ func (s SQL) Delete(ctx context.Context, query rel.Query) (int, error) {
 
 // SchemaApply performs migration to database.
 func (s SQL) SchemaApply(ctx context.Context, migration rel.Migration) error {
-	var (
-		statement string
-	)
+	var statement string
 
 	switch v := migration.(type) {
 	case rel.Table:

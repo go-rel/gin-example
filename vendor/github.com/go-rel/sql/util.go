@@ -72,6 +72,34 @@ func ColumnMapper(column *rel.Column) (string, int, int) {
 	return typ, m, n
 }
 
+// ColumnOptionsMapper function.
+func ColumnOptionsMapper(column *rel.Column) string {
+	var buffer strings.Builder
+
+	if column.Unsigned {
+		buffer.WriteString(" UNSIGNED")
+	}
+
+	if column.Unique {
+		buffer.WriteString(" UNIQUE")
+	}
+
+	if column.Required {
+		buffer.WriteString(" NOT NULL")
+	}
+
+	if column.Primary {
+		buffer.WriteString(" PRIMARY KEY")
+	}
+
+	buf := buffer.String()
+	if buf != "" {
+		buf = buf[1:]
+	}
+
+	return buf
+}
+
 // ExtractString between two string.
 func ExtractString(s, left, right string) string {
 	var (
