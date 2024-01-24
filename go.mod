@@ -7,7 +7,7 @@ require (
 	github.com/gin-contrib/requestid v0.0.6
 	github.com/gin-contrib/zap v0.2.0
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-rel/mysql v0.11.0
+	github.com/go-rel/mysql v0.12.0
 	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/reltest v0.12.0
 	github.com/go-sql-driver/mysql v1.7.1

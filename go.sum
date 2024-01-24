@@ -37,8 +37,8 @@ github.com/go-playground/universal-translator v0.18.1/go.mod h1:xekY+UJKNuX9WP91
 github.com/go-playground/validator/v10 v10.10.0/go.mod h1:74x4gJWsvQexRdW8Pn3dXSGrTK4nAUsbPlLADvpJkos=
 github.com/go-playground/validator/v10 v10.15.5 h1:LEBecTWb/1j5TNY1YYG2RcOUN3R7NLylN+x8TTueE24=
 github.com/go-playground/validator/v10 v10.15.5/go.mod h1:9iXMNT7sEkjXb0I+enO7QXmzG6QCsPWY4zveKFVRSyU=
-github.com/go-rel/mysql v0.11.0 h1:wBdl1QBQllaWzMLovDmqFwoNAo4vmfDz9h8GhjM1tS4=
-github.com/go-rel/mysql v0.11.0/go.mod h1:Q1Xa47BIyoeDfv5nFXo6VCEWwjpWpOX5wJnUAYOz4HA=
+github.com/go-rel/mysql v0.12.0 h1:GMwNktroIgA5a8AMxSj6MnnobXqZ85LnjPjtV0OU3Pc=
+github.com/go-rel/mysql v0.12.0/go.mod h1:Q1Xa47BIyoeDfv5nFXo6VCEWwjpWpOX5wJnUAYOz4HA=
 github.com/go-rel/primaryreplica v0.6.0 h1:8ZlgUatz+Ger+d51aIvlDWK3iZSa2RwD6ys3cingyf0=
 github.com/go-rel/rel v0.41.0 h1:21+n3QwPm1w193n9f+WB0LKDJxWS6bG3jO0DGqFCb7c=
 github.com/go-rel/rel v0.41.0/go.mod h1:6opWRxsoHoDq67fIDnsmcmnojpskWpPqCs0AoL/UrEU=
