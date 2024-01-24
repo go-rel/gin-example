@@ -122,20 +122,28 @@ func errorMapper(err error) error {
 		msg          = err.Error()
 		errCodeSep   = ':'
 		errCodeIndex = strings.IndexRune(msg, errCodeSep)
+		errStateSep   = '('
+		errStateIndex = -1
 	)
 
 	if errCodeIndex < 0 {
 		errCodeIndex = 0
 	}
 
-	switch msg[:errCodeIndex] {
+	errStateIndex = strings.IndexRune(msg[:errCodeIndex], errStateSep)
+	errStateIndex--
+	if errStateIndex < 0 {
+		errStateIndex = errCodeIndex
+	}
+
+	switch (msg[:errCodeIndex])[:errStateIndex] {
 	case "Error 1062":
 		return rel.ConstraintError{
 			Key:  sql.ExtractString(msg, "key '", "'"),
 			Type: rel.UniqueConstraint,
 			Err:  err,
 		}
-	case "Error 1452":
+	case "Error 1451", "Error 1452":
 		return rel.ConstraintError{
 			Key:  sql.ExtractString(msg, "CONSTRAINT `", "`"),
 			Type: rel.ForeignKeyConstraint,
