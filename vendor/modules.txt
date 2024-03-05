@@ -69,7 +69,7 @@ github.com/go-playground/validator/v10
 # github.com/go-rel/mysql v0.12.0
 ## explicit; go 1.21
 github.com/go-rel/mysql
-# github.com/go-rel/rel v0.41.0
+# github.com/go-rel/rel v0.42.0
 ## explicit; go 1.21
 github.com/go-rel/rel
 github.com/go-rel/rel/where
