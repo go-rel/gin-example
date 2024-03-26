@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/gin-contrib/cors v1.7.1
-	github.com/gin-contrib/requestid v0.0.6
+	github.com/gin-contrib/requestid v1.0.0
 	github.com/gin-contrib/zap v1.1.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-rel/mysql v0.12.0
@@ -29,7 +29,7 @@ require (
 	github.com/go-rel/sql v0.16.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect

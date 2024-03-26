@@ -45,8 +45,8 @@ github.com/gabriel-vasile/mimetype/internal/magic
 # github.com/gin-contrib/cors v1.7.1
 ## explicit; go 1.18
 github.com/gin-contrib/cors
-# github.com/gin-contrib/requestid v0.0.6
-## explicit; go 1.15
+# github.com/gin-contrib/requestid v1.0.0
+## explicit; go 1.20
 github.com/gin-contrib/requestid
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
@@ -101,7 +101,7 @@ github.com/goccy/go-json/internal/errors
 github.com/goccy/go-json/internal/runtime
 # github.com/google/go-cmp v0.5.8
 ## explicit; go 1.13
-# github.com/google/uuid v1.3.0
+# github.com/google/uuid v1.6.0
 ## explicit
 github.com/google/uuid
 # github.com/jinzhu/inflection v1.0.0
