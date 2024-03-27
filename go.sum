@@ -43,8 +43,8 @@ github.com/go-rel/reltest v0.12.0 h1:8tP6zeH22mOwbfDbtQ6pn7UgxVK8D1XgkAn31YQ8W/o
 github.com/go-rel/reltest v0.12.0/go.mod h1:JQGeMVG8i3OTk7wxNxKfrg1DyNz+nJcB0bjlyUjL4dE=
 github.com/go-rel/sql v0.16.0 h1:6k+eYAMSwBsKFXLHQFpPplMjWQJf6DMUPlTxwWoR/l8=
 github.com/go-rel/sql v0.16.0/go.mod h1:jPTiMPVdiNqsNnho1g7daKXW8cofViB/gcGXlMdNBac=
-github.com/go-sql-driver/mysql v1.8.0 h1:UtktXaU2Nb64z/pLiGIxY4431SJ4/dR5cjMmlVHgnT4=
-github.com/go-sql-driver/mysql v1.8.0/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
+github.com/go-sql-driver/mysql v1.8.1 h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=
+github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/goccy/go-json v0.10.2 h1:CrxCmQqYDkv1z7lO7Wbh2HN93uovUHgrECaO5ZrCXAU=
 github.com/goccy/go-json v0.10.2/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
 github.com/google/go-cmp v0.5.8 h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=
