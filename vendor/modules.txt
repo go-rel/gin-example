@@ -54,7 +54,7 @@ github.com/gin-contrib/requestid
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
-# github.com/gin-contrib/zap v1.1.1
+# github.com/gin-contrib/zap v1.1.3
 ## explicit; go 1.19
 github.com/gin-contrib/zap
 # github.com/gin-gonic/gin v1.10.0
