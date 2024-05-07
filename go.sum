@@ -16,8 +16,8 @@ github.com/gabriel-vasile/mimetype v1.4.3 h1:in2uUcidCuFcDKtdcBxlR0rJ1+fsokWf+uq
 github.com/gabriel-vasile/mimetype v1.4.3/go.mod h1:d8uq/6HKRL6CGdk+aubisF/M5GcPfT7nKyLpA0lbSSk=
 github.com/gin-contrib/cors v1.7.2 h1:oLDHxdg8W/XDoN/8zamqk/Drgt4oVZDvaV0YmvVICQw=
 github.com/gin-contrib/cors v1.7.2/go.mod h1:SUJVARKgQ40dmrzgXEVxj2m7Ig1v1qIboQkPDTQ9t2E=
-github.com/gin-contrib/requestid v1.0.0 h1:Ms19AcktabHdXDiMDvsR+PrkBEOtURWliX89n9b0VHY=
-github.com/gin-contrib/requestid v1.0.0/go.mod h1:311ycyAmroVeV6hDO1Wojooq/jmWfrgqU33M1ncP/TI=
+github.com/gin-contrib/requestid v1.0.2 h1:MRJqVwmpHAbkkF3ENgtDWU41l5ICmmVy01q2ZDYI1BE=
+github.com/gin-contrib/requestid v1.0.2/go.mod h1:GZWwfwmwZKfuxjnByRCrf+ugr65OW+425m5HiryD37s=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
 github.com/gin-contrib/zap v1.1.3 h1:9e/U9fYd4/OBfmSEBs5hHZq114uACn7bpuzvCkcJySA=
