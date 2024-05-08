@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/gin-contrib/cors v1.7.2
-	github.com/gin-contrib/requestid v1.0.0
+	github.com/gin-contrib/requestid v1.0.2
 	github.com/gin-contrib/zap v1.1.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-rel/mysql v0.12.0
