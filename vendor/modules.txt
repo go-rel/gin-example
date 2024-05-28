@@ -74,7 +74,7 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.20.0
 ## explicit; go 1.18
 github.com/go-playground/validator/v10
-# github.com/go-rel/mysql v0.12.0
+# github.com/go-rel/mysql v0.13.0
 ## explicit; go 1.21
 github.com/go-rel/mysql
 # github.com/go-rel/rel v0.42.0
@@ -84,7 +84,7 @@ github.com/go-rel/rel/where
 # github.com/go-rel/reltest v0.12.0
 ## explicit; go 1.21
 github.com/go-rel/reltest
-# github.com/go-rel/sql v0.16.0
+# github.com/go-rel/sql v0.17.0
 ## explicit; go 1.21
 github.com/go-rel/sql
 github.com/go-rel/sql/builder
