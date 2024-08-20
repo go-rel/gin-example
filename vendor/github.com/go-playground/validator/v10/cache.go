@@ -294,7 +294,7 @@ func (v *Validate) parseFieldTagsRecursive(tag string, fieldName string, alias s
 
 				if wrapper, ok := v.validations[current.tag]; ok {
 					current.fn = wrapper.fn
-					current.runValidationWhenNil = wrapper.runValidationOnNil
+					current.runValidationWhenNil = wrapper.runValidatinOnNil
 				} else {
 					panic(strings.TrimSpace(fmt.Sprintf(undefinedValidation, current.tag, fieldName)))
 				}

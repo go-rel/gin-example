@@ -167,7 +167,7 @@ Extension | MIME type | Aliases
 **.geojson** | application/geo+json | -
 **.har** | application/json | -
 **.ndjson** | application/x-ndjson | -
-**.rtf** | text/rtf | application/rtf
+**.rtf** | text/rtf | -
 **.srt** | application/x-subrip | application/x-srt, text/x-srt
 **.tcl** | text/x-tcl | application/x-tcl
 **.csv** | text/csv | -
