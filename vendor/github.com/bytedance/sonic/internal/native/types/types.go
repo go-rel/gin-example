@@ -22,7 +22,7 @@ import (
     `unsafe`
 )
 
-type ValueType = int64
+type ValueType int
 type ParsingError uint
 type SearchingError uint
 

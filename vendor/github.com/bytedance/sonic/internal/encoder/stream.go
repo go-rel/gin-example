@@ -17,10 +17,8 @@
 package encoder
 
 import (
-	"encoding/json"
-	"io"
-
-	"github.com/bytedance/sonic/internal/encoder/vars"
+    `encoding/json`
+    `io`
 )
 
 // StreamEncoder uses io.Writer as input.
@@ -38,20 +36,21 @@ func NewStreamEncoder(w io.Writer) *StreamEncoder {
 
 // Encode encodes interface{} as JSON to io.Writer
 func (enc *StreamEncoder) Encode(val interface{}) (err error) {
-    out := vars.NewBytes()
+    buf := newBytes()
+    out := buf
 
     /* encode into the buffer */
-    err = EncodeInto(out, val, enc.Opts)
+    err = EncodeInto(&out, val, enc.Opts)
     if err != nil {
         goto free_bytes
     }
 
     if enc.indent != "" || enc.prefix != "" {
         /* indent the JSON */
-        buf := vars.NewBuffer()
-        err = json.Indent(buf, *out, enc.prefix, enc.indent)
+        buf := newBuffer()
+        err = json.Indent(buf, out, enc.prefix, enc.indent)
         if err != nil {
-            vars.FreeBuffer(buf)
+            freeBuffer(buf)
             goto free_bytes
         }
 
@@ -63,17 +62,16 @@ func (enc *StreamEncoder) Encode(val interface{}) (err error) {
         /* copy into io.Writer */
         _, err = io.Copy(enc.w, buf)
         if err != nil {
-            vars.FreeBuffer(buf)
+            freeBuffer(buf)
             goto free_bytes
         }
 
     } else {
         /* copy into io.Writer */
         var n int
-        buf := *out
-        for len(buf) > 0 {
-            n, err = enc.w.Write(buf)
-            buf = buf[n:]
+        for len(out) > 0 {
+            n, err = enc.w.Write(out)
+            out = out[n:]
             if err != nil {
                 goto free_bytes
             }
@@ -86,6 +84,6 @@ func (enc *StreamEncoder) Encode(val interface{}) (err error) {
     }
 
 free_bytes:
-    vars.FreeBytes(out)
+    freeBytes(buf)
     return err
 }
